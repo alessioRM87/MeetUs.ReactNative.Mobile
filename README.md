@@ -19,5 +19,7 @@ MeetUs project developed with React Native
 
 1) react-native run-android
 
-# To see logs from console.log(), after run-android, type react-native log-android to show logs on terminal
+# To see logs from console.log(), 
+
+1) After react-native run-android, react-native log-android to show logs on terminal
 
