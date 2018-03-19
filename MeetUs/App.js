@@ -1,23 +1,54 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from "react";
+import { Text } from "react-native";
+import { Provider, connect } from "react-redux";
+import { StackNavigator, addNavigationHelpers } from "react-navigation";
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
-      </View>
-    );
-  }
+import Routes from "./config/Routes";
+
+import configureStore from "./store/ConfigureStore";
+
+const AppNavigator = StackNavigator(Routes, { headerMode : 'none' });
+
+const initialState = AppNavigator.router.getStateForAction(AppNavigator.router.getActionForPathAndParams('Login'));
+
+const navReducer = (state, action) => {
+    const newState = AppNavigator.router.getStateForAction(action, state);
+    return newState || state;
+};
+
+class AppWithNavigator extends Component {
+    render() {
+        return (
+            <AppNavigator
+                navigation={addNavigationHelpers({
+                    dispatch: this.props.dispatch,
+                    state: this.props.nav
+                })}
+            />
+        );
+    }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+const mapStateToProps = (state) => ({
+  nav: state.nav
 });
+
+const AppWithNavigationState = connect(mapStateToProps)(AppWithNavigator);
+
+const store = configureStore(navReducer);
+
+export default class App extends React.Component{
+
+    constructor(props){
+        super(props);
+    }
+
+    render(){
+        return (
+            <Provider store={store}>
+                <AppWithNavigationState />
+            </Provider>
+        );
+    }
+    
+}
