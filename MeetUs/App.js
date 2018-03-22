@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Text } from "react-native";
 import { Provider, connect } from "react-redux";
 import { StackNavigator, addNavigationHelpers } from "react-navigation";
+import { createReduxBoundAddListener, createReactNavigationReduxMiddleware } from 'react-navigation-redux-helpers';
 
 import Routes from "./config/Routes";
 
@@ -16,13 +17,21 @@ const navReducer = (state, action) => {
     return newState || state;
 };
 
+const middleware = createReactNavigationReduxMiddleware(
+    "app",
+    state => state.nav,
+);
+
+const addListener = createReduxBoundAddListener("app");
+
 class AppWithNavigator extends Component {
     render() {
         return (
             <AppNavigator
                 navigation={addNavigationHelpers({
                     dispatch: this.props.dispatch,
-                    state: this.props.nav
+                    state: this.props.nav,
+                    addListener
                 })}
             />
         );
