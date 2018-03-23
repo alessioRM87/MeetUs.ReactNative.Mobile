@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ImageBackground, Text } from 'react-native';
+import { View, StyleSheet, ImageBackground, Text, ProgressBarAndroid } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import TextInputEmail from './TextInputEmail';
@@ -26,9 +26,16 @@ class Login extends React.Component{
                         <Text style={styles.title} allowFontScaling={false}>MeetUs</Text>
                         <TextInputEmail/>
                         <TextInputPassword/>
-                        <ButtonLogin/>
+                        <ButtonLogin navigation={this.props.navigation}/>
                     </KeyboardAwareScrollView>
                 </ImageBackground>
+                {
+                    this.props.loading
+                    &&
+                    <View style={styles.containerLoading}>
+                        <ProgressBarAndroid style={styles.progressBar}/>
+                    </View>
+                }
             </View>
         );
     }
@@ -51,11 +58,24 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 15,
         fontFamily: 'Helvetica'
+    },
+    containerLoading: {
+        left: 0,
+        top: 0,
+        bottom: 0,
+        right: 0, 
+        position: 'absolute',
+        backgroundColor: 'black',
+        opacity: 0.5
+    },
+    progressBar: {
+
     }
 });
 
 function mapStateToProps (state) {
     return {
+        loading: state.loginReducer.loading
     };
 }
 function mapDispatchToProps(dispatch){

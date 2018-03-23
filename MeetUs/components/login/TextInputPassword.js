@@ -38,20 +38,19 @@ const styles = StyleSheet.create({
         marginTop: 16,
         marginLeft: 16,
         marginRight: 16,
-        height: 70
+        height: 90
     },
     containerInput: {
        
     },
     input:{
-        height: 50,
-        borderWidth: 1,
-        borderColor: "#FFFFFF",
-        borderRadius: 10,
+        height: 70,
+        borderRadius: 8,
         flex: 1,
         fontWeight: 'bold',
         fontFamily: "Helvetica",
         color: "#FFFFFF",
+        backgroundColor: "#FFFFFF22",
         fontSize: 16
     },
     textError: {
