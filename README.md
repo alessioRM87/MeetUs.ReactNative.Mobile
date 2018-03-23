@@ -15,9 +15,13 @@ MeetUs project developed with React Native
 
 6) Run the app: react-native run-android
 
-# To run the app, have an emulator running or device connected.
+# To run the app on emulator:
 
 1) react-native run-android
+
+# To run the app on device, use npm script to fix bundle problems:
+
+1) npm run android-device
 
 # To see logs from console.log(), 
 
