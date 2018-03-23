@@ -37,14 +37,15 @@ export default function loginReducer(state = initialState, action = {}){
                success: false,
                error: ""
             };
-            case "LOGIN_SUCCESS":
+        case "LOGIN_SUCCESS":
+            console.log("LOGIN REDUCER: set login success");
             return {
                 ...state,
-                login: false,
+                loading: false,
                 success: true,
                 error: ""
             };
-            case "LOGIN_ERROR":
+        case "LOGIN_ERROR":
             return {
                 ...state,
                 loading: false,
