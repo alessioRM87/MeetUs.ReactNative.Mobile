@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ImageBackground, Text, ProgressBarAndroid } from 'react-native';
+import { View, StyleSheet, Dimensions, ImageBackground, Text, ProgressBarAndroid } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import TextInputEmail from './TextInputEmail';
@@ -33,7 +33,7 @@ class Login extends React.Component{
                     this.props.loading
                     &&
                     <View style={styles.containerLoading}>
-                        <ProgressBarAndroid style={styles.progressBar}/>
+                        <ProgressBarAndroid/>
                     </View>
                 }
             </View>
@@ -66,11 +66,10 @@ const styles = StyleSheet.create({
         right: 0, 
         position: 'absolute',
         backgroundColor: 'black',
-        opacity: 0.5
+        opacity: 0.5,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    progressBar: {
-
-    }
 });
 
 function mapStateToProps (state) {

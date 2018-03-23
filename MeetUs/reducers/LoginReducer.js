@@ -5,7 +5,8 @@ const initialState = {
     passwordError: "",
     loading: false,
     success : false,
-    error : null
+    error : null,
+    user: null
 };
 
 export default function loginReducer(state = initialState, action = {}){
@@ -38,7 +39,6 @@ export default function loginReducer(state = initialState, action = {}){
                error: ""
             };
         case "LOGIN_SUCCESS":
-            console.log("LOGIN REDUCER: set login success");
             return {
                 ...state,
                 loading: false,
