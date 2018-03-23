@@ -77,8 +77,8 @@ export function login(email, password, callback){
             callback();
         })
         .catch(error => {
-            console.log("LOGIN ERROR");
-            dispatch(setLoginError(error));
+            console.log("LOGIN ERROR", error);
+            dispatch(setLoginError("Login failed: please try again"));
         })
 
 
