@@ -34,9 +34,10 @@ export function setLoginLoading(){
     };
 }
 
-export function setLoginSuccess(){
+export function setLoginSuccess(user){
     return {
         type : "LOGIN_SUCCESS",
+        user: user
     };
 }
 
@@ -63,18 +64,31 @@ export function login(email, password, callback){
 
         console.log("Body stringify: ", body);
 
+        let headers = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        };
+
         let data = {
             method: 'POST',
+            headers: headers,
             body: body
         };
 
         console.log("Data for request: ", data);
 
         fetch(serverURL + "/user/login", data)
-        .then(response => {
-            console.log("LOGIN SUCCESS", response);
-            dispatch(setLoginSuccess());
-            callback();
+        .then(response => response.json())
+        .then(responseJson => {
+            
+            if (responseJson.err){
+                dispatch(setLoginError('Wrong email/password: please try again'));
+            }
+            else{
+                dispatch(setLoginSuccess(responseJson.data));
+                callback();
+            }
+
         })
         .catch(error => {
             console.log("LOGIN ERROR", error);
