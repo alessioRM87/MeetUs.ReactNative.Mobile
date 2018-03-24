@@ -5,6 +5,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import TextInputEmail from './TextInputEmail';
 import TextInputPassword from './TextInputPassword';
 import ButtonLogin from './ButtonLogin';
+import ButtonCreateAccount from './ButtonCreateAccount';
 
 class Login extends React.Component{
 
@@ -27,6 +28,7 @@ class Login extends React.Component{
                         <TextInputEmail/>
                         <TextInputPassword/>
                         <ButtonLogin navigation={this.props.navigation}/>
+                        <ButtonCreateAccount navigation={this.props.navigation}/>
                     </KeyboardAwareScrollView>
                 </ImageBackground>
                 {
