@@ -1,4 +1,4 @@
-const serverURL = "https://meet-us-server1.herokuapp.com/api";
+import { serverURL } from '../config/Config';
 
 export function setEmail(email){
     return {
@@ -53,16 +53,12 @@ export function login(email, password, callback){
 
         dispatch(setLoginLoading());
 
-        console.log("Received: ", email, password);
-
         let json = {
             email: email,
             password: password
         };
 
         let body = JSON.stringify(json);
-
-        console.log("Body stringify: ", body);
 
         let headers = {
             Accept: 'application/json',
@@ -75,16 +71,16 @@ export function login(email, password, callback){
             body: body
         };
 
-        console.log("Data for request: ", data);
-
         fetch(serverURL + "/user/login", data)
         .then(response => response.json())
         .then(responseJson => {
             
             if (responseJson.err){
+                console.log("LOGIN ERROR", responseJson.err);
                 dispatch(setLoginError('Wrong email/password: please try again'));
             }
             else{
+                console.log("LOGIN SUCCESS", responseJson.data);
                 dispatch(setLoginSuccess(responseJson.data));
                 callback();
             }
@@ -93,8 +89,7 @@ export function login(email, password, callback){
         .catch(error => {
             console.log("LOGIN ERROR", error);
             dispatch(setLoginError("Login failed: please try again"));
-        })
-
+        });
 
     }
 }
