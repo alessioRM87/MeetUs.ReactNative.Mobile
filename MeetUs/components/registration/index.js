@@ -1,37 +1,84 @@
 import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Text, ImageBackground, ProgressBarAndroid } from 'react-native';
 import { connect } from 'react-redux';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import TextInputEmail from './TextInputEmail';
+import TextInputFirstName from './TextInputFirstName';
+import TextInputLastName from './TextInputLastName';
+import TextInputPassword from './TextInputPassword';
+import TextInputConfirmPassword from './TextInputConfirmPassword';
+import ButtonRegister from './ButtonRegister';
+import ButtonAlreadyAccount from './ButtonAlreadyAccount';
 
-class Login extends React.Component{
+class Registration extends React.Component{
 
     constructor(props){
         super(props);
     }
 
-    handleOnPressClickHere(){
-        this.props.navigation.navigate("Registration");
-    }
-
     render(){
         return (
-            <Image
-            source={require('../../images/main_background.jpeg')} 
-            style={styles.imageBackground}>
-                
-            </Image>
+            <View style={styles.container}>
+                <ImageBackground
+                source={require('../../images/main_background.jpeg')} 
+                style={styles.imageBackground}>
+                    <KeyboardAwareScrollView style={styles.scrollView}>
+                        <Text style={styles.title} allowFontScaling={false}>MeetUs</Text>
+                        <TextInputEmail/>
+                        <TextInputFirstName/>
+                        <TextInputLastName/>
+                        <TextInputPassword/>
+                        <TextInputConfirmPassword/>
+                        <ButtonRegister navigation={this.props.navigation}/>
+                        <ButtonAlreadyAccount navigation={this.props.navigation}/>
+                    </KeyboardAwareScrollView>
+                </ImageBackground>
+                {
+                    this.props.loading
+                    &&
+                    <View style={styles.containerLoading}>
+                        <ProgressBarAndroid/>
+                    </View>
+                }
+            </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    scrollView: {
+        flex: 1
+    },
     imageBackground: {
         flex: 1,
-        resizeMode: 'cover'
+    },
+    title:{
+        color: '#000000',
+        textAlign: 'center',
+        fontSize: 32,
+        fontWeight: 'bold',
+        marginTop: 15,
+        fontFamily: 'Helvetica'
+    },
+    containerLoading: {
+        left: 0,
+        top: 0,
+        bottom: 0,
+        right: 0, 
+        position: 'absolute',
+        backgroundColor: 'black',
+        opacity: 0.5,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 
 function mapStateToProps (state) {
     return {
+        loading: state.registrationReducer.loading
     };
 }
 function mapDispatchToProps(dispatch){
@@ -41,4 +88,4 @@ function mapDispatchToProps(dispatch){
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Login)
+)(Registration)

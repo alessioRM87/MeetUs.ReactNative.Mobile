@@ -13,10 +13,6 @@ class Login extends React.Component{
         super(props);
     }
 
-    handleOnPressClickHere(){
-        this.props.navigation.navigate("Registration");
-    }
-
     render(){
         return (
             <View style={styles.container}>

@@ -2,25 +2,25 @@ import React from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 
-class ButtonCreateAccount extends React.Component{
+class ButtonAlreadyAccount extends React.Component{
 
     constructor(props){
         super(props);
     }
 
-    handleOnPressCreateAccount(){
-        this.props.navigation.navigate("Registration");
+    handleOnPressAlreadyAccount(){
+        this.props.navigation.navigate("Login");
     }
 
     render(){
         return (
             <View
             style={styles.main}>
-            <Text style={styles.text}>Don't have an account?</Text>
+            <Text style={styles.text}>Already have an account?</Text>
             <TouchableOpacity
                 style={styles.button}
-                onPress={this.handleOnPressCreateAccount.bind(this)}>
-                    <Text style={styles.text} allowFontScaling={false}>CREATE NEW ACCOUNT</Text>
+                onPress={this.handleOnPressAlreadyAccount.bind(this)}>
+                    <Text style={styles.text} allowFontScaling={false}>SIGN IN</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -61,4 +61,4 @@ function mapDispatchToProps(dispatch){
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(ButtonCreateAccount)
+)(ButtonAlreadyAccount)
