@@ -43,7 +43,8 @@ export default function loginReducer(state = initialState, action = {}){
                 ...state,
                 loading: false,
                 success: true,
-                error: ""
+                error: "",
+                user: action.user
             };
         case "LOGIN_ERROR":
             return {
