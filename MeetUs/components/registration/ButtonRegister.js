@@ -43,7 +43,7 @@ class ButtonRegister extends React.Component{
             this.props.setEmailError("The email is not in the correct format");
         }
         else if (this.props.password != this.props.confirmPassword){
-            this.props.setConfirmPasswordError("Password do not match!");
+            this.props.setConfirmPasswordError("Passwords do not match!");
         }
         else{
             this.props.register(this.props.email, this.props.firstName, this.props.lastName, this.props.password, () => {
