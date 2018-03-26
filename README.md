@@ -1,6 +1,10 @@
 # MeetUs.ReactNative.Mobile
 MeetUs project developed with React Native
 
+# Install React Native Command Line:
+
+1) npm install -g react-native-cli
+
 # To start a React Native project, open Command Prompt:
 
 1) Install the command: npm install -g create-react-native-app
