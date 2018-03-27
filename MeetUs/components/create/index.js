@@ -2,11 +2,8 @@ import React from 'react';
 import { View, StyleSheet, Dimensions, ImageBackground, Text, ProgressBarAndroid } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import ButtonSearchEvent from './ButtonSearchEvent';
-import ButtonCreateEvent from './ButtonCreateEvent';
-import ButtonLogout from './ButtonLogout';
 
-class Home extends React.Component{
+class Create extends React.Component{
 
     constructor(props){
         super(props);
@@ -19,10 +16,7 @@ class Home extends React.Component{
             source={require('../../images/main_background.jpeg')} 
             style={styles.imageBackground}>
                 <KeyboardAwareScrollView style={styles.scrollView}>
-                    <Text style={styles.title} allowFontScaling={false}>MeetUs</Text>
-                    <ButtonSearchEvent navigation={this.props.navigation}/>
-                    <ButtonCreateEvent navigation={this.props.navigation}/>
-                    <ButtonLogout navigation={this.props.navigation}/>
+                    <Text style={styles.title} allowFontScaling={false}>MeetUs_create</Text>                   
                 </KeyboardAwareScrollView>
             </ImageBackground>
             {
@@ -79,4 +73,4 @@ function mapDispatchToProps(dispatch){
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Home)
+)(Create)
