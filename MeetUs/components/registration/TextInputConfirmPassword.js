@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, Text} from 'react-native';
 import { connect } from 'react-redux';
-import { setConfirmPassword } from '../../actions/ActionRegistration';
+import { setConfirmPassword } from '../../actions/ActionAuthentication';
 
 class TextInputConfirmPassword extends React.Component{
 
@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps (state) {
     return {
-        confirmPassword: state.registrationReducer.confirmPassword,
-        confirmPasswordError: state.registrationReducer.confirmPasswordError
+        confirmPassword: state.authenticationReducer.confirmPassword,
+        confirmPasswordError: state.authenticationReducer.confirmPasswordError
     };
 }
 function mapDispatchToProps(dispatch){

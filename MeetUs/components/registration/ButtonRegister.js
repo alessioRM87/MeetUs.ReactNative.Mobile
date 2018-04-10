@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { setEmailError, setFirstNameError, setLastNameError, setPasswordError, setConfirmPasswordError, register } from '../../actions/ActionRegistration';
+import { setEmailError, setFirstNameError, setLastNameError, setPasswordError, setConfirmPasswordError, register } from '../../actions/ActionAuthentication';
 
 class ButtonRegister extends React.Component{
 
@@ -103,12 +103,12 @@ const styles = StyleSheet.create({
 
 function mapStateToProps (state) {
     return {
-        email: state.registrationReducer.email,
-        firstName: state.registrationReducer.firstName,
-        lastName: state.registrationReducer.lastName,
-        password: state.registrationReducer.password,
-        confirmPassword: state.registrationReducer.confirmPassword,
-        error: state.registrationReducer.error
+        email: state.authenticationReducer.email,
+        firstName: state.authenticationReducer.firstName,
+        lastName: state.authenticationReducer.lastName,
+        password: state.authenticationReducer.password,
+        confirmPassword: state.authenticationReducer.confirmPassword,
+        error: state.authenticationReducer.error
     };
 }
 function mapDispatchToProps(dispatch){

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Dimensions, ImageBackground, Text, ProgressBarAndroid } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { autoLogin } from '../../actions/ActionAuthentication';
 import TextInputEmail from './TextInputEmail';
 import TextInputPassword from './TextInputPassword';
 import ButtonLogin from './ButtonLogin';
@@ -11,6 +12,9 @@ class Login extends React.Component{
 
     constructor(props){
         super(props);
+        this.props.autoLogin(() => {
+            this.props.navigation.navigate('Home');
+        });
     }
 
     render(){
@@ -72,11 +76,12 @@ const styles = StyleSheet.create({
 
 function mapStateToProps (state) {
     return {
-        loading: state.loginReducer.loading
+        loading: state.authenticationReducer.loading
     };
 }
 function mapDispatchToProps(dispatch){
     return {
+        autoLogin: (callback) => dispatch(autoLogin(callback))
     };
 }
 export default connect(

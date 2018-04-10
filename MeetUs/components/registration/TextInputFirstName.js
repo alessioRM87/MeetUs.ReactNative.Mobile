@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, Text} from 'react-native';
 import { connect } from 'react-redux';
-import { setFirstName } from '../../actions/ActionRegistration';
+import { setFirstName } from '../../actions/ActionAuthentication';
 
 class TextInputFirstName extends React.Component{
 
@@ -61,8 +61,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps (state) {
     return {
-        firstName: state.registrationReducer.firstName,
-        firstNameError: state.registrationReducer.firstNameError
+        firstName: state.authenticationReducer.firstName,
+        firstNameError: state.authenticationReducer.firstNameError
     };
 }
 function mapDispatchToProps(dispatch){

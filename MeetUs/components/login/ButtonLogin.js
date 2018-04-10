@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { setEmailError, setPasswordError, login } from '../../actions/ActionLogin';
+import { setEmailError, setPasswordError, login } from '../../actions/ActionAuthentication';
 
 class ButtonLogin extends React.Component{
 
@@ -80,9 +80,9 @@ const styles = StyleSheet.create({
 
 function mapStateToProps (state) {
     return {
-        email: state.loginReducer.email,
-        password: state.loginReducer.password,
-        error: state.loginReducer.error
+        email: state.authenticationReducer.email,
+        password: state.authenticationReducer.password,
+        error: state.authenticationReducer.error
     };
 }
 function mapDispatchToProps(dispatch){

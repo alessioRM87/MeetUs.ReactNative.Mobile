@@ -1,11 +1,9 @@
 import { combineReducers } from "redux";
-import loginReducer from './LoginReducer';
-import registrationReducer from './RegistrationReducer';
+import authenticationReducer from './AuthenticationReducer';
 
 export default function getRootReducer(navReducer) {
     return combineReducers({
         nav: navReducer,
-        loginReducer: loginReducer,
-        registrationReducer : registrationReducer,
+        authenticationReducer: authenticationReducer
     });
 }

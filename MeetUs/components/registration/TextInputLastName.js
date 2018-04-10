@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, Text} from 'react-native';
 import { connect } from 'react-redux';
-import { setLastName } from '../../actions/ActionRegistration';
+import { setLastName } from '../../actions/ActionAuthentication';
 
 class TextInputLastName extends React.Component{
 
@@ -61,8 +61,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps (state) {
     return {
-        lastName: state.registrationReducer.lastName,
-        lastNameError: state.registrationReducer.lastNameError
+        lastName: state.authenticationReducer.lastName,
+        lastNameError: state.authenticationReducer.lastNameError
     };
 }
 function mapDispatchToProps(dispatch){
