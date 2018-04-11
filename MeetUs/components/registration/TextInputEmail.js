@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, Text} from 'react-native';
 import { connect } from 'react-redux';
-import { setEmail } from '../../actions/ActionRegistration';
+import { setEmail } from '../../actions/ActionAuthentication';
 
 class TextInputEmail extends React.Component{
 
@@ -61,8 +61,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps (state) {
     return {
-        email: state.registrationReducer.email,
-        emailError: state.registrationReducer.emailError
+        email: state.authenticationReducer.email,
+        emailError: state.authenticationReducer.emailError
     };
 }
 function mapDispatchToProps(dispatch){

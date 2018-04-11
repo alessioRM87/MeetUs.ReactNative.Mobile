@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps (state) {
     return {
-        loading: state.registrationReducer.loading
+        loading: state.authenticationReducer.loading
     };
 }
 function mapDispatchToProps(dispatch){
