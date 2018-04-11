@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, Dimensions, ImageBackground, Text, ProgressBarAndroid } from 'react-native';
 import { connect } from 'react-redux';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import MapView from 'react-native-maps';
+import Header from '../common/Header';
 
 class Search extends React.Component{
 
@@ -12,13 +13,14 @@ class Search extends React.Component{
     render(){
         return (
             <View style={styles.container}>
-            <ImageBackground
-            source={require('../../images/main_background.jpeg')} 
-            style={styles.imageBackground}>
-                <KeyboardAwareScrollView style={styles.scrollView}>
-                    <Text style={styles.title} allowFontScaling={false}>MeetUs_search</Text>                   
-                </KeyboardAwareScrollView>
-            </ImageBackground>
+                <Header headerText='EVENTS AROUND ME'/>
+                <MapView
+                initialRegion={{
+                latitude: 37.78825,
+                longitude: -122.4324,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+                }}/>
             {
                 this.props.loading
                 &&
@@ -38,16 +40,8 @@ const styles = StyleSheet.create({
     scrollView: {
         flex: 1
     },
-    imageBackground: {
-        flex: 1,
-    },
-    title:{
-        color: '#000000',
-        textAlign: 'center',
-        fontSize: 32,
-        fontWeight: 'bold',
-        marginTop: 15,
-        fontFamily: 'Helvetica'
+    map: {
+        flex: 1
     },
     containerLoading: {
         left: 0,
