@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions, ImageBackground, Text, ProgressBarAndroid } from 'react-native';
+import { View, StyleSheet, Dimensions, ImageBackground, Text, ProgressBarAndroid, Platform, PermissionsAndroid } from 'react-native';
 import { connect } from 'react-redux';
-import MapView from 'react-native-maps';
-import Header from '../common/Header';
+import MapView, { Marker } from 'react-native-maps';
+import Header from '../common/header';
+import { getEventsAroundMe } from '../../actions/actionEvents';
 
 class Search extends React.Component{
 
@@ -10,17 +11,46 @@ class Search extends React.Component{
         super(props);
     }
 
+    componentDidMount(){
+        this.props.getEventsAroundMe();
+    }
+
+    handleOnPressMarker(event){
+        console.log("Clicked on event: ", event);
+    }
+
+    renderMarkers(){
+        return this.props.events.map((event, i) => {
+            return <Marker
+                key={i}
+                coordinate={{latitude: event.latitude, longitude: event.longitude}}
+                title={event.title}
+                onPress={this.handleOnPressMarker.bind(this, event)}>
+            </Marker>
+        });
+    }
+
     render(){
         return (
             <View style={styles.container}>
                 <Header headerText='EVENTS AROUND ME'/>
                 <MapView
+                style={styles.map}
                 initialRegion={{
-                latitude: 37.78825,
-                longitude: -122.4324,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-                }}/>
+                latitude: 43.684201,
+                longitude: -79.318706,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.05,
+                }}>
+                    {
+                        this.props.loading
+                        ?
+                        this.renderMarkers()
+                        :
+                        this.renderMarkers()
+                        
+                    }
+                </MapView>
             {
                 this.props.loading
                 &&
@@ -58,10 +88,14 @@ const styles = StyleSheet.create({
 
 function mapStateToProps (state) {
     return {
+        loading: state.eventsReducer.loading,
+        position: state.eventsReducer.position,
+        events: state.eventsReducer.events
     };
 }
 function mapDispatchToProps(dispatch){
     return {
+        getEventsAroundMe: () => dispatch(getEventsAroundMe())
     };
 }
 export default connect(
