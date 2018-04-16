@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, Text} from 'react-native';
 import { connect } from 'react-redux';
-import { setEmail } from '../../actions/ActionAuthentication';
+import { setEmail } from '../../actions/actionAuthentication';
 
 class TextInputEmail extends React.Component{
 

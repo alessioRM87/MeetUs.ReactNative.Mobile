@@ -1,5 +1,6 @@
-import { serverURL } from '../config/Config';
+import { serverURL } from '../config/config';
 import { AsyncStorage } from 'react-native';
+import axios from 'axios';
 
 export function setUserID(userID){
     return {
@@ -85,122 +86,88 @@ export function setConfirmPasswordError(confirmPasswordError){
     };
 }
 
-export function setAuthenticationLoading(){
-    return {
-        type : "AUTHENTICATION_LOADING",
-    };
-}
-
-export function setAuthenticationSuccess(){
-    return {
-        type : "AUTHENTICATION_SUCCESS",
-    };
-}
-
-export function setAuthenticationError(error){
-    return {
-        type : "AUTHENTICATION_ERROR",
-        error: error
-    };
-}
-
-export function setAuthenticationLogout(){
-    return {
-        type : "AUTHENTICATION_LOGOUT",
-    };
-}
-
 export function login(email, password, callback){
     return (dispatch) => {
 
-        dispatch(setAuthenticationLoading());
+        dispatch({
+            type: "AUTHENTICATION_LOADING"
+        });
 
-
-
-        let json = {
+        let body = {
             email: email,
             password: password
         };
 
-        let body = JSON.stringify(json);
+        axios.post(serverURL + "/user/login", body)
+          .then(function (response) {
 
-        let headers = {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        };
-
-        let data = {
-            method: 'POST',
-            headers: headers,
-            body: body
-        };
-
-        fetch(serverURL + "/user/login", data)
-        .then(response => response.json())
-        .then(responseJson => {
-            
-            if (responseJson.err){
-                console.log("AUTHENTICATION ERROR", responseJson.err);
-                dispatch(setLoginError('Wrong email/password: please try again'));
+            if (response.data.err){
+                console.log("AUTHENTICATION ERROR", response.data.err);
+                dispatch({
+                    type: "AUTHENTICATION_ERROR",
+                    error: 'Wrong email/password: please try again'
+                });
             }
             else{
 
-                console.log("AUTHENTICATION SUCCESS", responseJson.data);
-                let userInfoString = JSON.stringify(responseJson.data);
+                console.log("AUTHENTICATION SUCCESS", response.data.data);
+                let userInfoString = JSON.stringify(response.data.data);
                 saveAsyncStorage(dispatch, "userInfo", userInfoString, callback);
 
             }
 
-        })
-        .catch(error => {
+          })
+          .catch(function (error) {
             console.log("LOGIN ERROR", error);
-            dispatch(setLoginError("Login failed: please try again"));
-        });
+            dispatch({
+                type: "AUTHENTICATION_ERROR",
+                error: "Login failed: please try again"
+            });
+          });
 
     }
 }
 
 export function register(email, firstName, lastName, password, callback){
     return (dispatch) => {
-        dispatch(setAuthenticationLoading());
 
-        let json = {
+        dispatch({
+            type: "AUTHENTICATION_LOADING"
+        });
+
+        let body = {
             email: email,
             name: firstName + " " + lastName,
             password: password
         };
 
-        let body = JSON.stringify(json);
+        axios.post(serverURL + "/user/register", body)
+        .then(function (response) {
 
-        let headers = {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        };
+            if (response.data.err){
+                console.log("REGISTRATION ERROR", response.data.err);
 
-        let data = {
-            method: 'POST',
-            headers: headers,
-            body: body
-        };
-
-        fetch(serverURL + "/user/register", data)
-        .then(response => response.json())
-        .then(responseJson => {
-            
-            if (responseJson.err){
-                console.log("REGISTRATION ERROR", responseJson.err);
-                dispatch(setRegistrationError('An account with this email already exists'));
+                dispatch({
+                    type: "AUTHENTICATION_ERROR",
+                    error: 'An account with this email already exists'
+                });
             }
             else{
-                console.log("REGISTRATION SUCCESS", responseJson.data);
-                let userInfoString = JSON.stringify(responseJson.data);
+
+                console.log("REGISTRATION SUCCESS", response.data.data);
+                let userInfoString = JSON.stringify(response.data.data);
                 saveAsyncStorage(dispatch, "userInfo", userInfoString, callback);
+
             }
 
         })
-        .catch(error => {
+        .catch(function (error) {
             console.log("REGISTRATION ERROR", error);
-            dispatch(setLoginError("Registration failed: please try again"));
+
+            dispatch({
+                type: "AUTHENTICATION_ERROR",
+                error: "Registration failed: please try again"
+            });
         });
     }
 }
@@ -218,13 +185,18 @@ export async function saveAsyncStorage(dispatch, key, value, callback){
         dispatch(setEmail(json.email));
         dispatch(setFirstName(json.firstName));
         dispatch(setLastName(json.lastName));
-        dispatch(setAuthenticationSuccess());
+        dispatch({
+            type: "AUTHENTICATION_SUCCESS"
+        });
         callback();
         
     } 
     catch (error) {
         console.log("SAVE ASYNC STORAGE ERROR", error);
-        dispatch(setAuthenticationError('Unexpected error: please try again'));
+        dispatch({
+            type: "AUTHENTICATION_ERROR",
+            error: 'Unexpected error: please try again'
+        });
     }
 
    
@@ -245,7 +217,9 @@ export async function readFromAsyncStorage(dispatch, key, callback){
             dispatch(setEmail(json.email));
             dispatch(setFirstName(json.email));
             dispatch(setLastName(json.email));
-            dispatch(setAuthenticationSuccess());
+            dispatch({
+                type: "AUTHENTICATION_SUCCESS"
+            });
             callback();
         }
         else{

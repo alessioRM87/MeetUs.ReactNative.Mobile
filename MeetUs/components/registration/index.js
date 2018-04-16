@@ -2,13 +2,13 @@ import React from 'react';
 import { View, StyleSheet, Text, ImageBackground, ProgressBarAndroid } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import TextInputEmail from './TextInputEmail';
-import TextInputFirstName from './TextInputFirstName';
-import TextInputLastName from './TextInputLastName';
-import TextInputPassword from './TextInputPassword';
-import TextInputConfirmPassword from './TextInputConfirmPassword';
-import ButtonRegister from './ButtonRegister';
-import ButtonAlreadyAccount from './ButtonAlreadyAccount';
+import TextInputEmail from './textInputEmail';
+import TextInputFirstName from './textInputFirstName';
+import TextInputLastName from './textInputLastName';
+import TextInputPassword from './textInputPassword';
+import TextInputConfirmPassword from './textInputConfirmPassword';
+import ButtonRegister from './buttonRegister';
+import ButtonAlreadyAccount from './buttonAlreadyAccount';
 
 class Registration extends React.Component{
 

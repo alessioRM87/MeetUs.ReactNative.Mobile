@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, Text} from 'react-native';
 import { connect } from 'react-redux';
-import { setConfirmPassword } from '../../actions/ActionAuthentication';
+import { setConfirmPassword } from '../../actions/actionAuthentication';
 
 class TextInputConfirmPassword extends React.Component{
 

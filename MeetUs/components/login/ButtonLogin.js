@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { setEmailError, setPasswordError, login } from '../../actions/ActionAuthentication';
+import { setEmailError, setPasswordError, login } from '../../actions/actionAuthentication';
 
 class ButtonLogin extends React.Component{
 

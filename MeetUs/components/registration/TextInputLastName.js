@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, Text} from 'react-native';
 import { connect } from 'react-redux';
-import { setLastName } from '../../actions/ActionAuthentication';
+import { setLastName } from '../../actions/actionAuthentication';
 
 class TextInputLastName extends React.Component{
 

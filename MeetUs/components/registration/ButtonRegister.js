@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { setEmailError, setFirstNameError, setLastNameError, setPasswordError, setConfirmPasswordError, register } from '../../actions/ActionAuthentication';
+import { setEmailError, setFirstNameError, setLastNameError, setPasswordError, setConfirmPasswordError, register } from '../../actions/actionAuthentication';
 
 class ButtonRegister extends React.Component{
 

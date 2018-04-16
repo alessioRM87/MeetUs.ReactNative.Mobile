@@ -2,11 +2,11 @@ import React from 'react';
 import { View, StyleSheet, Dimensions, ImageBackground, Text, ProgressBarAndroid } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { autoLogin } from '../../actions/ActionAuthentication';
-import TextInputEmail from './TextInputEmail';
-import TextInputPassword from './TextInputPassword';
-import ButtonLogin from './ButtonLogin';
-import ButtonCreateAccount from './ButtonCreateAccount';
+import { autoLogin } from '../../actions/actionAuthentication';
+import TextInputEmail from './textInputEmail';
+import TextInputPassword from './textInputPassword';
+import ButtonLogin from './buttonLogin';
+import ButtonCreateAccount from './buttonCreateAccount';
 
 class Login extends React.Component{
 

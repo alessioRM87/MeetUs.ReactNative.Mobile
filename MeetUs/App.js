@@ -6,7 +6,7 @@ import { createReduxBoundAddListener, createReactNavigationReduxMiddleware } fro
 
 import Routes from "./config/Routes";
 
-import configureStore from "./store/ConfigureStore";
+import configureStore from "./store/configureStore";
 
 const AppNavigator = StackNavigator(Routes, { headerMode : 'none' });
 
