@@ -4,7 +4,7 @@ import { Provider, connect } from "react-redux";
 import { StackNavigator, addNavigationHelpers } from "react-navigation";
 import { createReduxBoundAddListener, createReactNavigationReduxMiddleware } from 'react-navigation-redux-helpers';
 
-import Routes from "./config/Routes";
+import Routes from "./config/routes";
 
 import configureStore from "./store/configureStore";
 
