@@ -11,7 +11,7 @@ const initialState = {
     confirmPasswordError: "",
     loading : false,
     success : false,
-    error : null
+    error : null,
 };
 
 export default function authenticationReducer(state = initialState, action = {}){

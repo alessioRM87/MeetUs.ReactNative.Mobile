@@ -11,6 +11,64 @@ async function requestLocationPermission(){
     );
 }
 
+export function setTitle(title){
+    return {
+        type : "EVENTS__SET_TITLE",
+        title : title
+    };
+}
+
+export function setTitleError(titleError){
+    return {
+        type : "EVENTS_SET_TITLE_ERROR",
+        titleError : titleError
+    };
+}
+
+export function setSubtitle(subtitle){
+    return {
+        type: "EVENTS_SET_SUBTITLE",
+        subtitle: subtitle
+    };
+}
+
+export function setSubtitleError(subtitleError){
+    return {
+        type: "EVENTS_SET_SUBTITLE_ERROR",
+        subtitleError: subtitleError
+    };
+}
+
+export function setAddress(address){
+    return {
+        type: "EVENTS_SET_ADDRESS",
+        address: address
+    };
+}
+
+export function setAddressError(addressError){
+    return {
+        type: "EVENTS_SET_ADDRESS_ERROR",
+        addressError: addressError
+    };
+}
+
+export function setDescription(description){
+    return {
+        type: "EVENTS_SET_DESCRIPTION",
+        dadescriptionte: description
+    };
+}
+
+export function setDescriptionError(descriptionError){
+    return {
+        type: "EVENTS_SET_DESCRIPTION_ERROR",
+        descriptionError: datdescriptionErroreError
+    };
+}
+
+
+
 export function getEventsAroundMe(){
 
     return dispatch => {
@@ -76,4 +134,50 @@ export function getEventsAroundMe(){
     }
 
     
+}
+
+export function create(title, subtitle, address, date, description, callback){
+    return (dispatch) => {
+
+        dispatch({
+            type: "EVENTS_LOADING"
+        });
+
+        let body = {
+            title: title,
+            subtitle: subtitle,
+            address: address,
+            date: date,
+            description: description,
+        };
+
+        axios.post(serverURL + "/user/create", body)
+        .then(function (response) {
+
+            if (response.data.err){
+                console.log("CREATE EVENT ERROR", response.data.err);
+
+                dispatch({
+                    type: "EVENTS_ERROR",
+                    error: 'An account with this CREATE EVENT already exists'
+                });
+            }
+            else{
+
+                console.log("CREATE EVENT SUCCESS", response.data.data);
+                let eventInfoString = JSON.stringify(response.data.data);
+                saveAsyncStorage(dispatch, "eventInfo", eventInfoString, callback);
+
+            }
+
+        })
+        .catch(function (error) {
+            console.log("CREATE EVENT ERROR", error);
+
+            dispatch({
+                type: "EVENTS_ERROR",
+                error: "CREATE EVENT failed: please try again"
+            });
+        });
+    }
 }
