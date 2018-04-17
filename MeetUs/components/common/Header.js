@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 
 class Header extends React.Component{
@@ -7,10 +7,11 @@ class Header extends React.Component{
     constructor(props){
         super(props);
     }
+
     render(){
         return (
             <View style={styles.container}>
-                <Text style={styles.headerText} allowFontScaling={false}>{this.props.headerText}</Text>
+                <Text style={styles.headerText} allowFontScaling={false}>{this.props.headerText}</Text>            
             </View>
         );
     }
@@ -27,10 +28,10 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         textAlign: 'center',
         alignSelf: 'center',
-        fontSize: 32,
+        fontSize: 18,
         fontWeight: 'bold',
         fontFamily: 'Helvetica'
-    }
+    },
 });
 
 function mapStateToProps (state) {

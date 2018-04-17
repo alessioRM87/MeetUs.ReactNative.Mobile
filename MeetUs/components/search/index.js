@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions, ImageBackground, Text, ProgressBarAndroid, Platform, PermissionsAndroid } from 'react-native';
+import { Button, View, StyleSheet, Dimensions, ImageBackground, Text, ProgressBarAndroid, Platform, PermissionsAndroid } from 'react-native';
 import { connect } from 'react-redux';
 import MapView, { Marker } from 'react-native-maps';
 import Header from '../common/header';
+import ButtonBack from '../common/back';
 import { getEventsAroundMe } from '../../actions/actionEvents';
 
 class Search extends React.Component{
@@ -13,6 +14,10 @@ class Search extends React.Component{
 
     componentDidMount(){
         this.props.getEventsAroundMe();
+    }
+
+    handleOnClickBack(){
+        this.props.navigation.navigate('Home');
     }
 
     handleOnPressMarker(event){
@@ -33,7 +38,8 @@ class Search extends React.Component{
     render(){
         return (
             <View style={styles.container}>
-                <Header headerText='EVENTS AROUND ME'/>
+                <Header handleOnClickBack={this.handleOnClickBack.bind(this)} headerText='EVENTS AROUND ME'/>
+                <ButtonBack navigateBack={this.handleOnClickBack.bind(this)}/>
                 <MapView
                 style={styles.map}
                 initialRegion={{
@@ -51,14 +57,14 @@ class Search extends React.Component{
                         
                     }
                 </MapView>
-            {
-                this.props.loading
-                &&
-                <View style={styles.containerLoading}>
-                    <ProgressBarAndroid/>
-                </View>
-            }
-        </View>
+                {
+                    this.props.loading
+                    &&
+                    <View style={styles.containerLoading}>
+                        <ProgressBarAndroid/>
+                    </View>
+                }
+            </View>
     );
 }
 }
