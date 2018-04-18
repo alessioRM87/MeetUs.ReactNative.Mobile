@@ -2,6 +2,12 @@ import React from 'react';
 import { View, StyleSheet, Dimensions, ImageBackground, Text, ProgressBarAndroid } from 'react-native';
 import { connect } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import TextInputTitle from './textInputTitle';
+import TextInputSubtitle from './textInputSubtitle';
+import TextInputAddress from './textInputAddress';
+import TextInputDate from './textInputDate';
+import TextInputDesciption from './textInputDescription';
+import ButtonCreate from './buttonCreate';
 
 class Create extends React.Component{
 
@@ -16,7 +22,13 @@ class Create extends React.Component{
             source={require('../../images/main_background.jpeg')} 
             style={styles.imageBackground}>
                 <KeyboardAwareScrollView style={styles.scrollView}>
-                    <Text style={styles.title} allowFontScaling={false}>MeetUs_create</Text>                   
+                    <Text style={styles.title} allowFontScaling={false}>CREATE EVENT</Text>                   
+                    <TextInputTitle/>
+                    <TextInputSubtitle/>
+                    <TextInputAddress/>
+                    <TextInputDate/>
+                    <TextInputDesciption/>
+                    <ButtonCreate navigation={this.props.navigation}/>
                 </KeyboardAwareScrollView>
             </ImageBackground>
             {

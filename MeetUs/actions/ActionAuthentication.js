@@ -172,6 +172,8 @@ export function register(email, firstName, lastName, password, callback){
     }
 }
 
+
+
 export async function saveAsyncStorage(dispatch, key, value, callback){
 
     console.log("SAVE ASYNC STORAGE", key, value);
