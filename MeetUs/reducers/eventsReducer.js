@@ -6,7 +6,7 @@ const initialState = {
         }
     },
     events: [],
-    eventID: null,
+    event: null,
     loading : false,
     success : false,
     error : null,
@@ -106,6 +106,11 @@ export default function eventsReducer(state = initialState, action = {}){
                 success : false,
                 error : action.error
             }
+        case "EVENTS_GET_EVENT_BY_ID_SUCCESS":
+            return {
+                ...state,
+                event: action.event
+            };
         default : 
             return state;
     }

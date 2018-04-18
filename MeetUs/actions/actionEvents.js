@@ -5,7 +5,7 @@ import { PermissionsAndroid, Platform } from 'react-native';
 export function setSelectedEventID(eventID){
     return {
         type: "EVENT_SET_SELECTED_EVENT_ID",
-        eventID: eventID``
+        eventID: eventID
     };
 }
 
@@ -284,5 +284,69 @@ export function create(createRequest){
         });
 
         
+    }
+}
+
+export function getEventById(eventID){
+    return (dispatch) => {
+
+        dispatch({
+            type: "EVENTS_LOADING"
+        });
+
+        let requestUrl = serverURL + "/event?id=" + eventID;
+
+        return axios.get(requestUrl).then(response => {
+            if (response.data.err){
+                console.log("GET EVENT BY ID ERROR: ", response.data.err);
+
+                dispatch({
+                    type: "EVENTS_ERROR",
+                    error: response.data.err
+                });
+
+                return new Promise.reject(response.data.err);
+            }
+            else{
+                console.log("GET EVENT BY ID SUCCESS: ", response.data.data);
+
+                let event = response.data.data;
+
+                requestUrl = serverURL + '/user?id=' + response.data.data.host_id;
+
+                return axios.get(requestUrl).then(responseUser => {
+
+                    event.host = responseUser.data.data;
+
+                    dispatch({
+                        type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
+                        event: event
+                    });
+    
+                    return new Promise.resolve();
+                })
+                .catch(error => {
+                    console.log("GET EVENT BY ID ERROR: ", error);
+
+                    dispatch({
+                        type: "EVENTS_ERROR",
+                        error: error
+                    });
+
+                    return new Promise.reject(error);
+                })
+            }
+        })
+        .catch(error => {
+            console.log("GET EVENT BY ID ERROR: ", error);
+
+            dispatch({
+                type: "EVENTS_ERROR",
+                error: error
+            });
+
+            return new Promise.reject(error);
+        });
+
     }
 }

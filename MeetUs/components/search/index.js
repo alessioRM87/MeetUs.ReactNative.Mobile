@@ -21,8 +21,7 @@ class Search extends React.Component{
     }
 
     handleOnPressMarker(eventID){
-        this.props.setSelectedEventID(eventID);
-        this.props.navigation.navigate('Details');
+        this.props.navigation.navigate('Details', {eventID: eventID});
     }
 
     renderMarkers(){
@@ -39,7 +38,7 @@ class Search extends React.Component{
     render(){
         return (
             <View style={styles.container}>
-                <Header handleOnClickBack={this.handleOnClickBack.bind(this)} headerText='EVENTS AROUND ME'/>
+                <Header headerText='EVENTS AROUND ME'/>
                 <ButtonBack navigateBack={this.handleOnClickBack.bind(this)}/>
                 <MapView
                 style={styles.map}
