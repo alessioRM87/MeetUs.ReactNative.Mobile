@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps (state) {
     return {
+        loading: state.eventsReducer.loading
     };
 }
 function mapDispatchToProps(dispatch){

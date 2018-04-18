@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
 function mapStateToProps (state) {
     return {
         subTitle: state.eventsReducer.subtitle,
-        subTitleError: state.eventsReducer.subtitleError
+        subtitleError: state.eventsReducer.subtitleError
     };
 }
 function mapDispatchToProps(dispatch){

@@ -12,6 +12,7 @@ const initialState = {
     loading : false,
     success : false,
     error : null,
+    user: null
 };
 
 export default function authenticationReducer(state = initialState, action = {}){
@@ -88,7 +89,8 @@ export default function authenticationReducer(state = initialState, action = {})
                 ...state,
                 loading: false,
                 success: true,
-                error: ""
+                error: "",
+                user: action.user
             };
         case "AUTHENTICATION_ERROR":
             return {
@@ -112,7 +114,8 @@ export default function authenticationReducer(state = initialState, action = {})
                 confirmPasswordError: "",
                 loading : false,
                 success : false,
-                error : null
+                error : null,
+                user: null
             };
         default : 
             return state;

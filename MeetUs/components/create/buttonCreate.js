@@ -40,8 +40,21 @@ class ButtonCreate extends React.Component{
             }
         }
         else{
-            this.props.create(this.props.title, this.props.subtitle, this.props.address, this.props.date, this.props.description, () => {
-                this.props.navigation.navigate("Home");
+
+            let createRequest = {
+                host_id: this.props.user._id,
+                title: this.props.title,
+                subtitle: this.props.subtitle,
+                description: this.props.description,
+                date: this.props.date,
+                address: this.props.address,
+            }
+
+            this.props.create(createRequest).then(() => {
+               this.props.navigation.pop(); 
+            })
+            .catch(error => {
+
             });
         }
 
@@ -92,8 +105,9 @@ const styles = StyleSheet.create({
 
 function mapStateToProps (state) {
     return {
+        user: state.authenticationReducer.user,
         title: state.eventsReducer.title,
-        subTtiel: state.eventsReducer.subtitle,
+        subtitle: state.eventsReducer.subtitle,
         address: state.eventsReducer.address,
         date: state.eventsReducer.date,
         description: state.eventsReducer.description,
@@ -104,10 +118,10 @@ function mapDispatchToProps(dispatch){
     return {
         setTitleError: (titleError) => dispatch(setTitleError(titleError)),
         setSubtitleError: (subtitleError) => dispatch(setSubtitleError(subtitleError)),
-        setAddressaError: (addressError) => dispatch(setAddressaError(addressError)),
+        setAddressError: (addressError) => dispatch(setAddressError(addressError)),
         setDateError: (dateError) => dispatch(setDateError(dateError)),
         setDescriptionError: (dateError) => dispatch(setDescriptionError(dateError)),
-        create: (title, subtitle, address, date, description, callback) => dispatch(create(title, subtitle, address, date, description, callback))
+        create: (createRequest) => dispatch(create(createRequest))
     };
 }
 export default connect(

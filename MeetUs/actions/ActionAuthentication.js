@@ -183,12 +183,9 @@ export async function saveAsyncStorage(dispatch, key, value, callback){
         console.log("SAVE ASYNC STORAGE SUCCESS");
             
         let json = JSON.parse(value);
-        dispatch(setUserID(json._id));
-        dispatch(setEmail(json.email));
-        dispatch(setFirstName(json.firstName));
-        dispatch(setLastName(json.lastName));
         dispatch({
-            type: "AUTHENTICATION_SUCCESS"
+            type: "AUTHENTICATION_SUCCESS",
+            user: json
         });
         callback();
         
@@ -215,12 +212,9 @@ export async function readFromAsyncStorage(dispatch, key, callback){
             console.log("READ ASYNC STORAGE SUCCESS", value);
             
             let json = JSON.parse(value);
-            dispatch(setUserID(json._id));
-            dispatch(setEmail(json.email));
-            dispatch(setFirstName(json.email));
-            dispatch(setLastName(json.email));
             dispatch({
-                type: "AUTHENTICATION_SUCCESS"
+                type: "AUTHENTICATION_SUCCESS",
+                user: json
             });
             callback();
         }
