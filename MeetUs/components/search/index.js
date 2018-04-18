@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import MapView, { Marker } from 'react-native-maps';
 import Header from '../common/header';
 import ButtonBack from '../common/back';
-import { getEventsAroundMe } from '../../actions/actionEvents';
+import { getEventsAroundMe, setSelectedEventID } from '../../actions/actionEvents';
 
 class Search extends React.Component{
 
@@ -20,8 +20,9 @@ class Search extends React.Component{
         this.props.navigation.navigate('Home');
     }
 
-    handleOnPressMarker(event){
-        console.log("Clicked on event: ", event);
+    handleOnPressMarker(eventID){
+        this.props.setSelectedEventID(eventID);
+        this.props.navigation.navigate('Details');
     }
 
     renderMarkers(){
@@ -30,7 +31,7 @@ class Search extends React.Component{
                 key={i}
                 coordinate={{latitude: event.latitude, longitude: event.longitude}}
                 title={event.title}
-                onPress={this.handleOnPressMarker.bind(this, event)}>
+                onPress={this.handleOnPressMarker.bind(this, event._id)}>
             </Marker>
         });
     }
@@ -101,7 +102,8 @@ function mapStateToProps (state) {
 }
 function mapDispatchToProps(dispatch){
     return {
-        getEventsAroundMe: () => dispatch(getEventsAroundMe())
+        getEventsAroundMe: () => dispatch(getEventsAroundMe()),
+        setSelectedEventID: (eventID) => dispatch(setSelectedEventID(eventID))
     };
 }
 export default connect(

@@ -6,6 +6,7 @@ const initialState = {
         }
     },
     events: [],
+    eventID: null,
     loading : false,
     success : false,
     error : null
@@ -13,6 +14,11 @@ const initialState = {
 
 export default function eventsReducer(state = initialState, action = {}){
     switch (action.type){
+        case "EVENT_SET_SELECTED_EVENT_ID":
+            return {
+                ...state,
+                eventID: action.eventID
+            };
         case "POSITION SUCCESS":
             return {
                 ...state,

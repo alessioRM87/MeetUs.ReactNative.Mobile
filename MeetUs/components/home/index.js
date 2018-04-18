@@ -13,8 +13,16 @@ class Home extends React.Component{
         this.props.navigation.navigate('Search');
     }
 
+    handleOnPressMySubscribedEVents(){
+
+    }
+
     handleOnPressCreateEvent(){
         this.props.navigation.navigate('Create');
+    }
+
+    handleOnPressMyHostedEvents(){
+        
     }
 
     handleOnPressLogout(){
@@ -38,8 +46,18 @@ class Home extends React.Component{
                         </TouchableOpacity>
                         <TouchableOpacity
                         style={styles.button}
+                        onPress={this.handleOnPressMySubscribedEVents.bind(this)}>
+                            <Text style={styles.text} allowFontScaling={false}>MY SUBSCRIBED EVENTS</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                        style={styles.button}
                         onPress={this.handleOnPressCreateEvent.bind(this)}>
                             <Text style={styles.text} allowFontScaling={false}>CREATE EVENT</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                        style={styles.button}
+                        onPress={this.handleOnPressMyHostedEvents.bind(this)}>
+                            <Text style={styles.text} allowFontScaling={false}>MY HOSTED EVENTS</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                         style={styles.button}

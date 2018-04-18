@@ -2,6 +2,13 @@ import { serverURL } from '../config/config';
 import axios from 'axios';
 import { PermissionsAndroid, Platform } from 'react-native';
 
+export function setSelectedEventID(eventID){
+    return {
+        type: "EVENT_SET_SELECTED_EVENT_ID",
+        eventID: eventID
+    };
+}
+
 async function requestLocationPermission(){
     return await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
