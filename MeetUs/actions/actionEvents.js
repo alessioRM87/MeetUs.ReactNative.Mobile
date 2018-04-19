@@ -88,6 +88,13 @@ export function setDateError(dateError){
     };
 }
 
+export function setMembers(members){
+    return {
+        type: "EVENTS_SET_MEMBERS",
+        members: members
+    };
+}
+
 export function getEventsAroundMe(){
 
     return dispatch => {
@@ -257,8 +264,6 @@ export function create(createRequest){
                         return new Promise.reject(error);
                     },
                     { enableHighAccuracy: true, timeout: 5000, maximumAge: 1000 });
-                    
-    
                 }
     
             })
@@ -272,7 +277,6 @@ export function create(createRequest){
 
                 return new Promise.reject(error);
             });
-
         })
         .catch(error => {
             dispatch({
@@ -317,6 +321,8 @@ export function getEventById(eventID){
                 return axios.get(requestUrl).then(responseUser => {
 
                     event.host = responseUser.data.data;
+
+                    console.log("EVENT BY ID UPDATED: ", event);
 
                     dispatch({
                         type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",

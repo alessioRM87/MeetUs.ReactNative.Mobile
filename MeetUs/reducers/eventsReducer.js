@@ -8,6 +8,7 @@ const initialState = {
     events: [],
     event: null,
     loading : false,
+    memberLoaded: false,
     success : false,
     error : null,
     title: "",
@@ -109,7 +110,10 @@ export default function eventsReducer(state = initialState, action = {}){
         case "EVENTS_GET_EVENT_BY_ID_SUCCESS":
             return {
                 ...state,
-                event: action.event
+                event: action.event,
+                loading: false,
+                success: true,
+                error: null
             };
         default : 
             return state;
