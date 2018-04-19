@@ -7,6 +7,7 @@ const initialState = {
     },
     events: [],
     event: null,
+    isMember: false,
     loading : false,
     memberLoaded: false,
     success : false,
@@ -80,6 +81,16 @@ export default function eventsReducer(state = initialState, action = {}){
                 ...state,
                 eventID: action.eventID
             };
+        case "EVENTS_SET_MEMBERS":
+            let selectedEvent = state.event;
+
+            selectedEvent.users = action.members;
+
+            return {
+                ...state,
+                event: selectedEvent
+            };
+
         case "POSITION SUCCESS":
             return {
                 ...state,
@@ -108,6 +119,7 @@ export default function eventsReducer(state = initialState, action = {}){
                 error : action.error
             }
         case "EVENTS_GET_EVENT_BY_ID_SUCCESS":
+
             return {
                 ...state,
                 event: action.event,

@@ -291,6 +291,26 @@ export function create(createRequest){
     }
 }
 
+export function getMembers(memberIDs){
+    return new Promise.all(memberIDs.map(memberID => {
+
+        console.log("MEMBER ID: ", memberID);
+
+        let requestUrl = serverURL + "/user?id=" + memberID;
+
+        return axios.get(requestUrl).then(responseMember => {
+
+            console.log("MEMBER RESPONSE: ", responseMember.data.data);
+
+            return new Promise.resolve(responseMember.data.data);
+        })
+        .catch(error => {
+            return new Promise.reject(error)
+        });
+
+    }));
+}
+
 export function getEventById(eventID){
     return (dispatch) => {
 
@@ -301,6 +321,220 @@ export function getEventById(eventID){
         let requestUrl = serverURL + "/event?id=" + eventID;
 
         return axios.get(requestUrl).then(response => {
+            if (response.data.err){
+                console.log("GET EVENT BY ID ERROR: ", response.data.err);
+
+                dispatch({
+                    type: "EVENTS_ERROR",
+                    error: response.data.err
+                });
+
+                return new Promise.reject(response.data.err);
+            }
+            else{
+                console.log("GET EVENT BY ID SUCCESS: ", response.data.data);
+
+                let event = response.data.data;
+
+                requestUrl = serverURL + '/user?id=' + response.data.data.host_id;
+
+                return axios.get(requestUrl).then(responseUser => {
+
+                    event.host = responseUser.data.data;
+
+                    console.log("EVENT BY ID UPDATED: ", event);
+
+                    dispatch({
+                        type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
+                        event: event
+                    });
+    
+                    return new Promise.resolve(event);
+                })
+                .catch(error => {
+                    console.log("GET EVENT BY ID ERROR: ", error);
+
+                    dispatch({
+                        type: "EVENTS_ERROR",
+                        error: error
+                    });
+
+                    return new Promise.reject(error);
+                })
+            }
+        })
+        .catch(error => {
+            console.log("GET EVENT BY ID ERROR: ", error);
+
+            dispatch({
+                type: "EVENTS_ERROR",
+                error: error
+            });
+
+            return new Promise.reject(error);
+        });
+
+    }
+}
+
+export function participateToEvent(user_id, event_id){
+
+    return dispatch => {
+
+        dispatch({
+            type: "EVENTS_LOADING"
+        });
+
+        let requestUrl = serverURL + "/event/subscribe";
+
+        let body = {
+            user_id: user_id,
+            event_id: event_id
+        };
+
+        return axios.post(requestUrl, body).then(response => {
+            if (response.data.err){
+                console.log("SUBSCRIBE TO EVENT ERROR: ", response.data.err);
+
+                dispatch({
+                    type: "EVENTS_ERROR",
+                    error: response.data.err
+                });
+
+                return new Promise.reject(response.data.err);
+            }
+            else{
+                console.log("SUBSCRIBE TO EVENT SUCCESS: ", response.data.data);
+
+                let event = response.data.data;
+
+                requestUrl = serverURL + '/user?id=' + response.data.data.host_id;
+
+                return axios.get(requestUrl).then(responseUser => {
+
+                    event.host = responseUser.data.data;
+
+                    console.log("EVENT BY ID UPDATED: ", event);
+
+                    dispatch({
+                        type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
+                        event: event
+                    });
+    
+                    return new Promise.resolve();
+                })
+                .catch(error => {
+                    console.log("GET EVENT BY ID ERROR: ", error);
+
+                    dispatch({
+                        type: "EVENTS_ERROR",
+                        error: error
+                    });
+
+                    return new Promise.reject(error);
+                })
+            }
+        })
+        .catch(error => {
+            console.log("GET EVENT BY ID ERROR: ", error);
+
+            dispatch({
+                type: "EVENTS_ERROR",
+                error: error
+            });
+
+            return new Promise.reject(error);
+        });
+    }
+
+}
+
+export function unsubscribeFromEvent(user_id, event_id){
+
+    return dispatch => {
+
+        dispatch({
+            type: "EVENTS_LOADING"
+        });
+
+        let requestUrl = serverURL + "/event/unsubscribe";
+
+        let body = {
+            user_id: user_id,
+            event_id: event_id
+        };
+
+        return axios.post(requestUrl, body).then(response => {
+            if (response.data.err){
+                console.log("SUBSCRIBE TO EVENT ERROR: ", response.data.err);
+
+                dispatch({
+                    type: "EVENTS_ERROR",
+                    error: response.data.err
+                });
+
+                return new Promise.reject(response.data.err);
+            }
+            else{
+                console.log("SUBSCRIBE TO EVENT SUCCESS: ", response.data.data);
+
+                let event = response.data.data;
+
+                requestUrl = serverURL + '/user?id=' + response.data.data.host_id;
+
+                return axios.get(requestUrl).then(responseUser => {
+
+                    event.host = responseUser.data.data;
+
+                    console.log("EVENT BY ID UPDATED: ", event);
+
+                    dispatch({
+                        type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
+                        event: event
+                    });
+    
+                    return new Promise.resolve();
+                })
+                .catch(error => {
+                    console.log("GET EVENT BY ID ERROR: ", error);
+
+                    dispatch({
+                        type: "EVENTS_ERROR",
+                        error: error
+                    });
+
+                    return new Promise.reject(error);
+                })
+            }
+        })
+        .catch(error => {
+            console.log("GET EVENT BY ID ERROR: ", error);
+
+            dispatch({
+                type: "EVENTS_ERROR",
+                error: error
+            });
+
+            return new Promise.reject(error);
+        });
+    }
+
+}
+
+export function getHostedEvents(host_id){
+    return (dispatch) => {
+
+        dispatch({
+            type: "EVENTS_LOADING"
+        });
+
+        let requestUrl = serverURL + "/host_event";
+
+        let body = {
+            host_id: host_id
+        };
+
+        return axios.post(requestUrl, body).then(response => {
             if (response.data.err){
                 console.log("GET EVENT BY ID ERROR: ", response.data.err);
 
@@ -354,5 +588,234 @@ export function getEventById(eventID){
             return new Promise.reject(error);
         });
 
+    }
+}
+
+export function getSubscribedEvents(guest_id){
+    return (dispatch) => {
+
+        dispatch({
+            type: "EVENTS_LOADING"
+        });
+
+        let requestUrl = serverURL + "/guest_event";
+
+        let body = {
+            guest_id: guest_id
+        };
+
+        return axios.post(requestUrl, body).then(response => {
+            if (response.data.err){
+                console.log("GET EVENT BY ID ERROR: ", response.data.err);
+
+                dispatch({
+                    type: "EVENTS_ERROR",
+                    error: response.data.err
+                });
+
+                return new Promise.reject(response.data.err);
+            }
+            else{
+                console.log("GET EVENT BY ID SUCCESS: ", response.data.data);
+
+                let event = response.data.data;
+
+                requestUrl = serverURL + '/user?id=' + response.data.data.host_id;
+
+                return axios.get(requestUrl).then(responseUser => {
+
+                    event.host = responseUser.data.data;
+
+                    console.log("EVENT BY ID UPDATED: ", event);
+
+                    dispatch({
+                        type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
+                        event: event
+                    });
+    
+                    return new Promise.resolve();
+                })
+                .catch(error => {
+                    console.log("GET EVENT BY ID ERROR: ", error);
+
+                    dispatch({
+                        type: "EVENTS_ERROR",
+                        error: error
+                    });
+
+                    return new Promise.reject(error);
+                })
+            }
+        })
+        .catch(error => {
+            console.log("GET EVENT BY ID ERROR: ", error);
+
+            dispatch({
+                type: "EVENTS_ERROR",
+                error: error
+            });
+
+            return new Promise.reject(error);
+        });
+
+    }
+}
+
+export function deleteEvent(eventID){
+    return dispatch => {
+        dispatch({
+            type: "EVENTS_LOADING"
+        });
+
+        let requestUrl = serverURL + "/event?id=" + eventID;
+
+        return axios.delete(requestUrl).then(response => {
+            if (response.data.err){
+                console.log("GET EVENT BY ID ERROR: ", response.data.err);
+
+                dispatch({
+                    type: "EVENTS_ERROR",
+                    error: response.data.err
+                });
+
+                return new Promise.reject(response.data.err);
+            }
+            else{
+                console.log("GET EVENT BY ID SUCCESS: ", response.data.data);
+
+                let event = response.data.data;
+
+                requestUrl = serverURL + '/user?id=' + response.data.data.host_id;
+
+                return axios.get(requestUrl).then(responseUser => {
+
+                    event.host = responseUser.data.data;
+
+                    console.log("EVENT BY ID UPDATED: ", event);
+
+                    dispatch({
+                        type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
+                        event: event
+                    });
+    
+                    return new Promise.resolve();
+                })
+                .catch(error => {
+                    console.log("GET EVENT BY ID ERROR: ", error);
+
+                    dispatch({
+                        type: "EVENTS_ERROR",
+                        error: error
+                    });
+
+                    return new Promise.reject(error);
+                })
+            }
+        })
+        .catch(error => {
+            console.log("GET EVENT BY ID ERROR: ", error);
+
+            dispatch({
+                type: "EVENTS_ERROR",
+                error: error
+            });
+
+            return new Promise.reject(error);
+        });
+    }
+}
+
+export function updateEvent(updateRequest){
+    return dispatch => {
+
+        dispatch({
+            type: "EVENTS_LOADING"
+        });
+
+        let googleAPIUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+        var googleRequestUrl = googleAPIUrl + updateRequest.address;
+
+        return axios.get(googleRequestUrl).then(response => {
+            let latlong = response.data.results.map(result => {
+                const longitude = result.geometry.location.lng;
+                const latitude = result.geometry.location.lat;
+                const formattedAddress = result.formatted_address;
+
+                return {
+                    latitude: latitude,
+                    longitude: longitude,
+                    address: formattedAddress
+                };
+            });
+
+            let requestUrl = serverURL + "/event/update";
+
+            let body = {
+                _id: updateRequest._id,
+                title: updateRequest.title,
+                description: updateRequest.description,
+                subtitle: updateRequest.subtitle,
+                latitude: latlong.latitude,
+                longitude: latlong.longitude,
+                date: updateRequest.date,
+                address: latlong.address,
+            };
+
+            return axios.post(requestUrl, body).then(response => {
+                if (response.data.err){
+                    console.log("GET EVENT BY ID ERROR: ", response.data.err);
+
+                    dispatch({
+                        type: "EVENTS_ERROR",
+                        error: response.data.err
+                    });
+
+                    return new Promise.reject(response.data.err);
+                }
+                else{
+                    console.log("GET EVENT BY ID SUCCESS: ", response.data.data);
+
+                    let event = response.data.data;
+
+                    requestUrl = serverURL + '/user?id=' + response.data.data.host_id;
+
+                    return axios.get(requestUrl).then(responseUser => {
+
+                        event.host = responseUser.data.data;
+
+                        console.log("EVENT BY ID UPDATED: ", event);
+
+                        dispatch({
+                            type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
+                            event: event
+                        });
+        
+                        return new Promise.resolve();
+                    })
+                    .catch(error => {
+                        console.log("GET EVENT BY ID ERROR: ", error);
+
+                        dispatch({
+                            type: "EVENTS_ERROR",
+                            error: error
+                        });
+
+                        return new Promise.reject(error);
+                    })
+                }
+            })
+            .catch(error => {
+                console.log("GET EVENT BY ID ERROR: ", error);
+
+                dispatch({
+                    type: "EVENTS_ERROR",
+                    error: error
+                });
+
+                return new Promise.reject(error);
+            });
+        });
+
+        
     }
 }

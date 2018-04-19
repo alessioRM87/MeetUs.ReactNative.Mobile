@@ -33,12 +33,13 @@ class EventTitle extends React.Component{
 const styles = StyleSheet.create({
     main: {
         flex: 1,
+        backgroundColor: '#FFFFFF',
         flexDirection: 'column'
     },
     container: {
         height: 40,
+        marginTop: 20,
         flexDirection: 'row',
-        backgroundColor: '#FFFFFF',
         alignItems: 'center'
     },
     icon: {

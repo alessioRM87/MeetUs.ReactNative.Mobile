@@ -18,29 +18,29 @@ class Create extends React.Component{
     render(){
         return (
             <View style={styles.container}>
-            <ImageBackground
-            source={require('../../images/main_background.jpeg')} 
-            style={styles.imageBackground}>
-                <KeyboardAwareScrollView style={styles.scrollView}>
-                    <Text style={styles.title} allowFontScaling={false}>CREATE EVENT</Text>                   
-                    <TextInputTitle/>
-                    <TextInputSubtitle/>
-                    <TextInputAddress/>
-                    <TextInputDate/>
-                    <TextInputDesciption/>
-                    <ButtonCreate navigation={this.props.navigation}/>
-                </KeyboardAwareScrollView>
-            </ImageBackground>
-            {
-                this.props.loading
-                &&
-                <View style={styles.containerLoading}>
-                    <ProgressBarAndroid/>
-                </View>
-            }
-        </View>
-    );
-}
+                <ImageBackground
+                source={require('../../images/main_background.jpeg')} 
+                style={styles.imageBackground}>
+                    <KeyboardAwareScrollView style={styles.scrollView}>
+                        <Text style={styles.title} allowFontScaling={false}>CREATE EVENT</Text>                   
+                        <TextInputTitle/>
+                        <TextInputSubtitle/>
+                        <TextInputAddress/>
+                        <TextInputDate/>
+                        <TextInputDesciption/>
+                        <ButtonCreate navigation={this.props.navigation}/>
+                    </KeyboardAwareScrollView>
+                </ImageBackground>
+                {
+                    this.props.loading
+                    &&
+                    <View style={styles.containerLoading}>
+                        <ProgressBarAndroid/>
+                    </View>
+                }
+            </View>
+        );
+    }
 }
 
 const styles = StyleSheet.create({

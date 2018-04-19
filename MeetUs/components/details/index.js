@@ -3,11 +3,14 @@ import { View, StyleSheet, ImageBackground, ProgressBarAndroid } from 'react-nat
 import { connect } from 'react-redux';
 import Header from '../common/header';
 import ButtonBack from '../common/back';
+import ButtonSubscribe from './subscribe';
+import ButtonUnsubscribe from './unsubscribe';
 import EventTitle from './eventTitle';
 import EventSubtitle from './eventSubtitle';
 import EventDescription from './eventDescription';
 import EventMembers from './eventMembers';
-import { getEventById } from '../../actions/actionEvents';
+import ButtonEditDelete from './editDelete';
+import { getEventById, getMembers, setMembers } from '../../actions/actionEvents';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 class Details extends React.Component{
@@ -25,6 +28,35 @@ class Details extends React.Component{
         this.props.navigation.pop();
     }
 
+    handleOnClickEdit(){
+        this.props.navigation.navigate("Edit");
+    }
+
+    renderButtons(){
+        var isMember = false;
+
+        if (this.props.user._id != this.props.event.host_id){
+
+            console.log("User is not host: ", this.props.user._id, this.props.event.host_id);
+
+            for (var i = 0; i < this.props.event.members.length; i++){
+                if (this.props.user._id == this.props.event.members[i]){
+                    isMember = true;
+                }
+            }
+    
+            if (isMember){
+                return <ButtonUnsubscribe/>
+            }
+            else{
+                return <ButtonSubscribe/>
+            }
+        }
+        else{
+            return <ButtonEditDelete navigation={this.props.navigation}/>
+        }
+    }
+
     render(){
         return (
             <View style={styles.main}>
@@ -37,8 +69,12 @@ class Details extends React.Component{
                         <EventTitle/>
                         <EventSubtitle/>
                         <EventDescription/>
-                        <EventMembers/>
                     </KeyboardAwareScrollView>
+                    {
+                        (this.props.event)
+                        &&
+                        this.renderButtons()
+                    }
                     {
                         this.props.loading
                         &&
@@ -78,13 +114,16 @@ const styles = StyleSheet.create({
 
 function mapStateToProps (state) {
     return {
+        user: state.authenticationReducer.user,
         event: state.eventsReducer.event,
-        loading: state.eventsReducer.loading
+        loading: state.eventsReducer.loading,
     };
 }
 function mapDispatchToProps(dispatch){
     return {
-        getEventById: (eventID) => dispatch(getEventById(eventID))
+        getEventById: (eventID) => dispatch(getEventById(eventID)),
+        getMembers: (memberIDs) => dispatch(getMembers(memberIDs)),
+        setMembers: (members) => dispatch(setMembers(members))
     };
 }
 export default connect(

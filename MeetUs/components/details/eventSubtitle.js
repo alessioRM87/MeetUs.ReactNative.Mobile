@@ -23,8 +23,7 @@ class EventSubtitle extends React.Component{
 
 const styles = StyleSheet.create({
     main: {
-        marginTop: 20,
-        height: 120,
+        marginTop: 10,
         flex: 1,
         flexDirection: 'column',
         backgroundColor: '#FFFFFF',
@@ -43,6 +42,7 @@ const styles = StyleSheet.create({
     text: {
         marginLeft: 20,
         marginRight: 20,
+        marginBottom: 40,
         fontSize: 18,
         fontFamily: 'Helvetica'
     }

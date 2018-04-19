@@ -38,7 +38,7 @@ class EventMembers extends React.Component{
 
 const styles = StyleSheet.create({
     main: {
-        marginTop: 20,
+        marginTop: 10,
         flex: 1,
         flexDirection: 'column',
         backgroundColor: '#FFFFFF',

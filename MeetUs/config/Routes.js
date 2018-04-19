@@ -4,6 +4,7 @@ import Registration from '../components/registration';
 import Search from '../components/search';
 import Create from '../components/create';
 import Details from '../components/details';
+import Edit from '../components/edit';
 
 
 const Routes = {
@@ -12,7 +13,8 @@ const Routes = {
     Home : { screen: Home },
     Search : { screen: Search },
     Create : { screen: Create },
-    Details: { screen: Details }
+    Details: { screen: Details },
+    Edit: { screen: Edit }
 };
 
 export default Routes;

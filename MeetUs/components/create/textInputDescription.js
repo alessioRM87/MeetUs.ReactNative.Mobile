@@ -17,6 +17,7 @@ class TextInputDescription extends React.Component{
         return (
             <View style={styles.main}>
                 <TextInput
+                    multiline={true}
                     style={styles.input}
                     autoCapitalize="none"
                     placeholder="Description"
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
        
     },
     input:{
-        height: 70,
+        height: 200,
         borderRadius: 8,
         flex: 1,
         fontWeight: 'bold',
