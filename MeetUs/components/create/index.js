@@ -19,7 +19,7 @@ class Create extends React.Component{
         return (
             <View style={styles.container}>
                 <ImageBackground
-                source={require('../../images/main_background.jpeg')} 
+                source={require('../../images/main_background.jpg')} 
                 style={styles.imageBackground}>
                     <KeyboardAwareScrollView style={styles.scrollView}>
                         <Text style={styles.title} allowFontScaling={false}>CREATE EVENT</Text>                   

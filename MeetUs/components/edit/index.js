@@ -83,7 +83,7 @@ class Edit extends React.Component{
         return (
             <View style={styles.container}>
                 <ImageBackground
-                source={require('../../images/main_background.jpeg')} 
+                source={require('../../images/main_background.jpg')} 
                 style={styles.imageBackground}>
                     <Header headerText="UPDATE EVENT"/>
                     <ButtonBack navigateBack={this.handleOnClickBack.bind(this)}/>
