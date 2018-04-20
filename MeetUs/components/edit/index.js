@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { updateEvent } from '../../actions/actionEvents';
+import Header from '../common/header';
+import ButtonBack from '../common/back';
 
 class Edit extends React.Component{
 
@@ -73,12 +75,18 @@ class Edit extends React.Component{
 
     }
 
+    handleOnClickBack(){
+        this.props.navigation.pop();
+    }
+
     render(){
         return (
             <View style={styles.container}>
                 <ImageBackground
                 source={require('../../images/main_background.jpeg')} 
                 style={styles.imageBackground}>
+                    <Header headerText="UPDATE EVENT"/>
+                    <ButtonBack navigateBack={this.handleOnClickBack.bind(this)}/>
                     <KeyboardAwareScrollView style={styles.scrollView}>
                         <Text style={styles.title} allowFontScaling={false}>UPDATE EVENT</Text>                   
                         <View style={styles.inputContainer}>
