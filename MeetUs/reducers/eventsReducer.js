@@ -6,6 +6,10 @@ const initialState = {
         }
     },
     events: [],
+    myHostedEvents: null,
+    myHostedEventsLoaded: false,
+    mySubscribedEvents: null,
+    mySubscribedEventsLoaded: false,
     event: null,
     isMember: false,
     loading : false,
@@ -126,6 +130,50 @@ export default function eventsReducer(state = initialState, action = {}){
                 loading: false,
                 success: true,
                 error: null
+            };
+        case "EVENTS_HOSTED_EVENTS_LOADING":
+            return {
+                ...state,
+                loading : true,
+                myHostedEventsLoaded : false,
+                error : ""
+            };
+        case "EVENTS_HOSTED_EVENTS_SUCCESS":
+            return {
+                ...state,
+                loading : false,
+                myHostedEventsLoaded : true,
+                error : "",
+                myHostedEvents: action.events
+            };
+        case "EVENTS_HOSTED_EVENTS_ERROR":
+            return {
+                ...state,
+                loading : false,
+                myHostedEventsLoaded : true,
+                error : action.error
+            };
+            case "EVENTS_SUBSCRIBED_EVENTS_LOADING":
+            return {
+                ...state,
+                loading : true,
+                mySubscribedEventsLoaded : false,
+                error : ""
+            };
+        case "EVENTS_SUBSCRIBED_EVENTS_SUCCESS":
+            return {
+                ...state,
+                loading : false,
+                mySubscribedEventsLoaded : true,
+                error : "",
+                mySubscribedEvents: action.events
+            };
+        case "EVENTS_SUBSCRIBED_EVENTS_ERROR":
+            return {
+                ...state,
+                loading : false,
+                mySubscribedEventsLoaded : true,
+                error : action.error
             };
         default : 
             return state;

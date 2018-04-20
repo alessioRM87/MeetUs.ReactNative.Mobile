@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { unsubscribeFromEvent } from '../../actions/actionEvents';
+import { unsubscribeFromEvent, getSubscribedEvents } from '../../actions/actionEvents';
 
 class ButtonUnsubscribe extends React.Component{
 
@@ -10,7 +10,22 @@ class ButtonUnsubscribe extends React.Component{
     }
 
     handleOnPress(){
-        this.props.unsubscribeFromEvent(this.props.user._id, this.props.event._id);
+        this.props.unsubscribeFromEvent(this.props.user._id, this.props.event._id).then((event) => {
+            this.props.getSubscribedEvents(this.props.user._id).then(events => {
+
+            })
+            .catch(error => {
+
+            });
+        })
+        .catch(error => {
+            this.props.getSubscribedEvents(this.props.user._id).then(events => {
+
+            })
+            .catch(error => {
+
+            });;
+        });
     }
 
     render(){
@@ -47,7 +62,9 @@ function mapStateToProps (state) {
 }
 function mapDispatchToProps(dispatch){
     return {
-        unsubscribeFromEvent: (user_id, event_id) => dispatch(unsubscribeFromEvent(user_id, event_id))
+        unsubscribeFromEvent: (user_id, event_id) => dispatch(unsubscribeFromEvent(user_id, event_id)),
+        getSubscribedEvents: (guestID) => dispatch(getSubscribedEvents(guestID))
+
     };
 }
 export default connect(

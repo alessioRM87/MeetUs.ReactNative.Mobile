@@ -8,11 +8,17 @@ import TextInputAddress from './textInputAddress';
 import TextInputDate from './textInputDate';
 import TextInputDesciption from './textInputDescription';
 import ButtonCreate from './buttonCreate';
+import Header from '../common/header';
+import ButtonBack from '../common/back';
 
 class Create extends React.Component{
 
     constructor(props){
         super(props);
+    }
+
+    handleOnClickBack(){
+        this.props.navigation.pop();
     }
 
     render(){
@@ -21,6 +27,8 @@ class Create extends React.Component{
                 <ImageBackground
                 source={require('../../images/main_background.jpg')} 
                 style={styles.imageBackground}>
+                    <Header headerText="CREATE EVENT"/>
+                    <ButtonBack navigateBack={this.handleOnClickBack.bind(this)}/>
                     <KeyboardAwareScrollView style={styles.scrollView}>
                         <Text style={styles.title} allowFontScaling={false}>CREATE EVENT</Text>                   
                         <TextInputTitle/>

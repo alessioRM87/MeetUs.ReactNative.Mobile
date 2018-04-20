@@ -420,8 +420,9 @@ export function participateToEvent(user_id, event_id){
                         type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
                         event: event
                     });
-    
+
                     return new Promise.resolve();
+    
                 })
                 .catch(error => {
                     console.log("GET EVENT BY ID ERROR: ", error);
@@ -525,7 +526,7 @@ export function getHostedEvents(host_id){
     return (dispatch) => {
 
         dispatch({
-            type: "EVENTS_LOADING"
+            type: "EVENTS_HOSTED_EVENTS_LOADING"
         });
 
         let requestUrl = serverURL + "/host_event";
@@ -536,56 +537,40 @@ export function getHostedEvents(host_id){
 
         return axios.post(requestUrl, body).then(response => {
             if (response.data.err){
-                console.log("GET EVENT BY ID ERROR: ", response.data.err);
+                console.log("GET HOSTED EVENTS ERROR: ", response.data.err);
 
                 dispatch({
-                    type: "EVENTS_ERROR",
+                    type: "EVENTS_HOSTED_EVENTS_ERROR",
                     error: response.data.err
                 });
 
                 return new Promise.reject(response.data.err);
+
             }
             else{
-                console.log("GET EVENT BY ID SUCCESS: ", response.data.data);
+                console.log("GET HOSTED EVENTS SUCCESS: ", response.data.data);
 
                 let event = response.data.data;
 
-                requestUrl = serverURL + '/user?id=' + response.data.data.host_id;
+                dispatch({
+                    type: "EVENTS_HOSTED_EVENTS_SUCCESS",
+                    events: response.data.data
+                });
 
-                return axios.get(requestUrl).then(responseUser => {
+                return new Promise.resolve(response.data.data);
 
-                    event.host = responseUser.data.data;
-
-                    console.log("EVENT BY ID UPDATED: ", event);
-
-                    dispatch({
-                        type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
-                        event: event
-                    });
-    
-                    return new Promise.resolve();
-                })
-                .catch(error => {
-                    console.log("GET EVENT BY ID ERROR: ", error);
-
-                    dispatch({
-                        type: "EVENTS_ERROR",
-                        error: error
-                    });
-
-                    return new Promise.reject(error);
-                })
             }
         })
         .catch(error => {
             console.log("GET EVENT BY ID ERROR: ", error);
 
             dispatch({
-                type: "EVENTS_ERROR",
+                type: "EVENTS_HOSTED_EVENTS_ERROR",
                 error: error
             });
 
             return new Promise.reject(error);
+
         });
 
     }
@@ -595,67 +580,44 @@ export function getSubscribedEvents(guest_id){
     return (dispatch) => {
 
         dispatch({
-            type: "EVENTS_LOADING"
+            type: "EVENTS_SUBSCRIBED_EVENTS_LOADING"
         });
 
-        let requestUrl = serverURL + "/guest_event";
+        let requestUrl = serverURL + "/guest_event?id=" + guest_id;
 
-        let body = {
-            guest_id: guest_id
-        };
-
-        return axios.post(requestUrl, body).then(response => {
+        return axios.get(requestUrl).then(response => {
             if (response.data.err){
-                console.log("GET EVENT BY ID ERROR: ", response.data.err);
+                console.log("GET SUBSCRIBED EVENTS ERROR: ", response.data.err);
 
                 dispatch({
-                    type: "EVENTS_ERROR",
+                    type: "EVENTS_SUBSCRIBED_EVENTS_ERROR",
                     error: response.data.err
                 });
 
                 return new Promise.reject(response.data.err);
+
             }
             else{
-                console.log("GET EVENT BY ID SUCCESS: ", response.data.data);
+                console.log("GET SUBSCRIBED EVENTS SUCCESS: ", response.data.data);
 
-                let event = response.data.data;
+                dispatch({
+                    type: "EVENTS_SUBSCRIBED_EVENTS_SUCCESS",
+                    events: response.data.data
+                });
 
-                requestUrl = serverURL + '/user?id=' + response.data.data.host_id;
-
-                return axios.get(requestUrl).then(responseUser => {
-
-                    event.host = responseUser.data.data;
-
-                    console.log("EVENT BY ID UPDATED: ", event);
-
-                    dispatch({
-                        type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
-                        event: event
-                    });
-    
-                    return new Promise.resolve();
-                })
-                .catch(error => {
-                    console.log("GET EVENT BY ID ERROR: ", error);
-
-                    dispatch({
-                        type: "EVENTS_ERROR",
-                        error: error
-                    });
-
-                    return new Promise.reject(error);
-                })
+                return new Promise.resolve(response.data.data);
             }
         })
         .catch(error => {
-            console.log("GET EVENT BY ID ERROR: ", error);
+            console.log("GET SUBSCRIBED EVENTS ERROR: ", error);
 
             dispatch({
-                type: "EVENTS_ERROR",
+                type: "EVENTS_SUBSCRIBED_EVENTS_ERROR",
                 error: error
             });
 
             return new Promise.reject(error);
+
         });
 
     }
@@ -755,15 +717,15 @@ export function updateEvent(updateRequest){
                 title: updateRequest.title,
                 description: updateRequest.description,
                 subtitle: updateRequest.subtitle,
-                latitude: latlong.latitude,
-                longitude: latlong.longitude,
+                latitude: latlong[0].latitude,
+                longitude: latlong[0].longitude,
                 date: updateRequest.date,
-                address: latlong.address,
+                address: latlong[0].address,
             };
 
             return axios.post(requestUrl, body).then(response => {
                 if (response.data.err){
-                    console.log("GET EVENT BY ID ERROR: ", response.data.err);
+                    console.log("UPDATE EVENT ERROR: ", response.data.err);
 
                     dispatch({
                         type: "EVENTS_ERROR",
@@ -773,7 +735,7 @@ export function updateEvent(updateRequest){
                     return new Promise.reject(response.data.err);
                 }
                 else{
-                    console.log("GET EVENT BY ID SUCCESS: ", response.data.data);
+                    console.log("UPDATE EVENT SUCCESS: ", response.data.data);
 
                     let event = response.data.data;
 
@@ -790,7 +752,7 @@ export function updateEvent(updateRequest){
                             event: event
                         });
         
-                        return new Promise.resolve();
+                        return new Promise.resolve(event);
                     })
                     .catch(error => {
                         console.log("GET EVENT BY ID ERROR: ", error);

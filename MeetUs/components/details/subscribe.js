@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { participateToEvent } from '../../actions/actionEvents';
+import { participateToEvent, getSubscribedEvents } from '../../actions/actionEvents';
 
 class ButtonSubscribe extends React.Component{
 
@@ -10,7 +10,22 @@ class ButtonSubscribe extends React.Component{
     }
 
     handleOnPress(){
-        this.props.participateToEvent(this.props.user._id, this.props.event._id);
+        this.props.participateToEvent(this.props.user._id, this.props.event._id).then((event) => {
+            this.props.getSubscribedEvents(this.props.user._id).then(events => {
+
+            })
+            .catch(error => {
+
+            });
+        })
+        .catch(error => {
+            this.props.getSubscribedEvents(this.props.user._id).then(events => {
+
+            })
+            .catch(error => {
+
+            });;
+        });
     }
 
     render(){
@@ -47,7 +62,8 @@ function mapStateToProps (state) {
 }
 function mapDispatchToProps(dispatch){
     return {
-        participateToEvent: (user_id, event_id) => dispatch(participateToEvent(user_id, event_id))
+        participateToEvent: (user_id, event_id) => dispatch(participateToEvent(user_id, event_id)),
+        getSubscribedEvents: (guestID) => dispatch(getSubscribedEvents(guestID))
     };
 }
 export default connect(

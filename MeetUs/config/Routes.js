@@ -5,6 +5,9 @@ import Search from '../components/search';
 import Create from '../components/create';
 import Details from '../components/details';
 import Edit from '../components/edit';
+import MyHostedEvents from '../components/myHostedEvents';
+import MySubscribedEvents from '../components/mySubscribedEvents';
+
 
 
 const Routes = {
@@ -14,7 +17,9 @@ const Routes = {
     Search : { screen: Search },
     Create : { screen: Create },
     Details: { screen: Details },
-    Edit: { screen: Edit }
+    Edit: { screen: Edit },
+    MyHostedEvents: { screen: MyHostedEvents },
+    MySubscribedEvents: { screen: MySubscribedEvents}
 };
 
 export default Routes;

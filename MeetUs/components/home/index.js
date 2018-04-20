@@ -14,7 +14,7 @@ class Home extends React.Component{
     }
 
     handleOnPressMySubscribedEVents(){
-
+        this.props.navigation.navigate('MySubscribedEvents');
     }
 
     handleOnPressCreateEvent(){
@@ -22,7 +22,7 @@ class Home extends React.Component{
     }
 
     handleOnPressMyHostedEvents(){
-        
+        this.props.navigation.navigate('MyHostedEvents');
     }
 
     handleOnPressLogout(){

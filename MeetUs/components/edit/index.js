@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ImageBackground, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ImageBackground, Text, TextInput, TouchableOpacity, ProgressBarAndroid } from 'react-native';
 import { connect } from 'react-redux';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -15,8 +15,8 @@ class Edit extends React.Component{
         this.state = {
             title: this.props.event.title,
             titleError: "",
-            subTitle: this.props.event.subtitle,
-            subTitleError: "",
+            subtitle: this.props.event.subtitle,
+            subtitleError: "",
             description: this.props.event.description,
             descriptionError: "",
             address: this.props.event.address,
@@ -72,7 +72,68 @@ class Edit extends React.Component{
     }
 
     handleOnPressEdit(){
+        this.setState({
+            titleError: "",
+            subtitleError: "",
+            descriptionError: "",
+            addressError: "",
+            dateError: "",
+            error: "",
+        })
 
+        if (this.state.title == "" || 
+            this.state.subtitle == "" ||  
+            this.state.address == "" || 
+            this.state.date == "" || 
+            this.state.description == ""){
+
+            if (this.state.title == ""){
+                this.setState({
+                    titleError: "Please insert title"
+                });
+            }
+            if (this.state.subtitle == ""){
+                this.setState({
+                    subtitleError: "Please insert subtitle"
+                });
+                this.props.setSubtitleError("Please insert subtitle");
+            }
+            if (this.state.address == ""){
+                this.setState({
+                    addressError: "Please insert address"
+                });
+            }
+            if (this.state.date == ""){
+                this.setState({
+                    dateError: "Please choose date"
+                });
+            } 
+            if (this.state.description == ""){
+                this.setState({
+                    descriptionError: "Please insert description"
+                });
+            }
+        }
+        else{
+
+            let updateRequest = {
+                _id: this.props.event._id,
+                title: this.state.title,
+                subtitle: this.state.subtitle,
+                description: this.state.description,
+                date: this.state.date,
+                address: this.state.address,
+            }
+
+            this.props.updateEvent(updateRequest).then(() => {
+               this.props.navigation.pop(); 
+            })
+            .catch(error => {
+                this.setState({
+                    error: error
+                })
+            });
+        }
     }
 
     handleOnClickBack(){
@@ -109,7 +170,7 @@ class Edit extends React.Component{
                                 value={this.state.subtitle}
                                 onChangeText={this.handleOnChangeSubtitle.bind(this)}/>       
                             <Text
-                                style={styles.textError}>{this.state.subTitleError}</Text> 
+                                style={styles.textError}>{this.state.subtitleError}</Text> 
                         </View>
                         <View style={styles.inputContainer}>
                             <TextInput
@@ -264,6 +325,7 @@ const styles = StyleSheet.create({
 function mapStateToProps (state) {
     return {
         event: state.eventsReducer.event,
+        user: state.authenticationReducer.user,
         loading: state.eventsReducer.loading
     };
 }

@@ -12,7 +12,6 @@ class EventTitle extends React.Component{
         return (
             <View
             style={styles.main}>
-                <View style={styles.blueSpace}/>
                 <View style={styles.container}>
                     <Image style={styles.icon} source={require('../../images/ic_place_black_24dp.png')}/>
                     <Text style={styles.text}>{(this.props.event) ? this.props.event.address : ""}</Text>
