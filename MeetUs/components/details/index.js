@@ -61,7 +61,7 @@ class Details extends React.Component{
         return (
             <View style={styles.main}>
                 <ImageBackground
-                    source={require('../../images/main_background.jpeg')} 
+                    source={require('../../images/main_background.jpg')} 
                     style={styles.imageBackground}>
                     <Header headerText={(this.props.event) ? this.props.event.title.toUpperCase() : ""}/>
                     <ButtonBack navigateBack={this.handleOnClickBack.bind(this)}/>
