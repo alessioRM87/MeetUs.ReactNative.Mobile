@@ -1,12 +1,62 @@
 import { serverURL } from '../config/config';
 import axios from 'axios';
 import { PermissionsAndroid, Platform } from 'react-native';
+import { login } from '../actions/actionAuthentication';
 
-export function setSelectedEventID(eventID){
-    return {
-        type: "EVENT_SET_SELECTED_EVENT_ID",
-        eventID: eventID
-    };
+export function getPosition(){
+    if (Platform.OS == "android"){
+        const granted = requestLocationPermission();
+    }
+
+    if (granted){
+        return navigator.geolocation.getCurrentPosition((position) => {
+
+            console.log("GET POSITION SUCCESS: ", position);
+
+            return new Promise.resolve(position);
+
+        }, (error) => {
+
+            console.log("GET POSITION ERROR: ", error);
+
+            return new Promise.reject();
+        },
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 1000 })
+    }
+    else{
+        return new Promise.reject();
+    }
+}
+
+export function validateAddress(address){
+    let googleAPIUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+    var googleRequestUrl = googleAPIUrl + createRequest.address;
+
+    return axios.get(googleRequestUrl)
+    .then(response => {
+        let latlong = response.data.results.map(result => {
+            const longitude = result.geometry.location.lng;
+            const latitude = result.geometry.location.lat;
+            const formattedAddress = result.formatted_address;
+
+            return {
+                latitude: latitude,
+                longitude: longitude,
+                address: formattedAddress
+            };
+        });
+
+        return new Promise.resolve({
+            latitude: latlong[0].latitude,
+            longitude: latlong[0].longitude,
+            address: latlong[0].formattedAddress     
+        });
+    })
+    .catch(error => {
+        console.log("VALIDATE ADDRESS ERROR: ", error);
+
+        return new Promise.reject();
+    });
 }
 
 async function requestLocationPermission(){
@@ -18,148 +68,37 @@ async function requestLocationPermission(){
     );
 }
 
-export function setTitle(title){
-    return {
-        type : "EVENTS_SET_TITLE",
-        title : title
-    };
-}
-
-export function setTitleError(titleError){
-    return {
-        type : "EVENTS_SET_TITLE_ERROR",
-        titleError : titleError
-    };
-}
-
-export function setSubtitle(subtitle){
-    return {
-        type: "EVENTS_SET_SUBTITLE",
-        subtitle: subtitle
-    };
-}
-
-export function setSubtitleError(subtitleError){
-    return {
-        type: "EVENTS_SET_SUBTITLE_ERROR",
-        subtitleError: subtitleError
-    };
-}
-
-export function setAddress(address){
-    return {
-        type: "EVENTS_SET_ADDRESS",
-        address: address
-    };
-}
-
-export function setAddressError(addressError){
-    return {
-        type: "EVENTS_SET_ADDRESS_ERROR",
-        addressError: addressError
-    };
-}
-
-export function setDescription(description){
-    return {
-        type: "EVENTS_SET_DESCRIPTION",
-        description: description
-    };
-}
-
-export function setDescriptionError(descriptionError){
-    return {
-        type: "EVENTS_SET_DESCRIPTION_ERROR",
-        descriptionError: descriptionError
-    };
-}
-
-export function setDate(date){
-    return {
-        type: "EVENTS_SET_DATE",
-        date: date
-    };
-}
-
-export function setDateError(dateError){
-    return {
-        type: "EVENTS_SET_DATE_ERROR",
-        dateError: dateError
-    };
-}
-
-export function setMembers(members){
-    return {
-        type: "EVENTS_SET_MEMBERS",
-        members: members
-    };
-}
-
 export function getEventsAroundMe(){
 
     return dispatch => {
 
-        if (Platform.OS == "android"){
-            const granted = requestLocationPermission();
-        }
+        dispatch({
+            type: "EVENTS_LOADING"
+        });
 
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
+        // let requestURL = serverURL + "/event/search?latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude + "&distance=50"
+    
+        let requestURL = serverURL + "/event/search?latitude=43.684201&longitude=-79.318706&distance=50000";
 
-                console.log("GET EVENTS AROUND ME", position);
-        
-                dispatch({
-                    type: "EVENTS_LOADING"
-                });
+        axios.get(requestURL)
+        .then(response => {
 
-                // let requestURL = serverURL + "/event/search?latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude + "&distance=50"
-            
-                let requestURL = serverURL + "/event/search?latitude=43.684201&longitude=-79.318706&distance=50000";
+            console.log("GET EVENTS AROUND ME SUCCESS", response.data.data);
 
-                axios.get(requestURL)
-                .then(response => {
+            dispatch({
+                type: "EVENTS_SUCCESS",
+                events: response.data.data
+            });
+        })
+        .catch(error => {
 
-                    if (response.data.err){
-
-                        console.log("GET EVENTS AROUND ME ERROR", response.data.err);
-
-                        dispatch({
-                            type: "EVENTS_ERROR",
-                            error: response.data.err
-                        })
-                    }
-                    else{
-                        console.log("GET EVENTS AROUND ME SUCCESS", response.data.data);
-
-                        dispatch({
-                            type: "EVENTS_SUCCESS",
-                            events: response.data.data
-                        });
-                    }
-                })
-                .catch(error => {
-
-                    dispatch({
-                        type: "EVENTS_ERROR",
-                        error: error
-                    })
-                });
-            },
-            (error) => {
-                console.log("POSITION ERROR: ", error);
-
-                dispatch({
-                    type: "EVENTS_ERROR",
-                    error: error
-                })
-            },
-            { enableHighAccuracy: true, timeout: 5000, maximumAge: 1000 }
-        );
+            dispatch({
+                type: "EVENTS_ERROR",
+            })
+        });
 
         
     }
-
-    
 }
 
 export function create(createRequest){
@@ -169,146 +108,39 @@ export function create(createRequest){
             type: "EVENTS_LOADING"
         });
 
-        let googleAPIUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
-        var googleRequestUrl = googleAPIUrl + createRequest.address;
+        let body = {
+            host_id: createRequest.host_id,
+            title: createRequest.title,
+            subtitle: createRequest.subtitle,
+            address: createRequest.address,
+            latitude: createRequest.latitude,
+            longitude: createRequest.longitude,
+            date: createRequest.date,
+            description: createRequest.description,
+        };
 
-        return axios.get(googleRequestUrl).then(response => {
-            let latlong = response.data.results.map(result => {
-                const longitude = result.geometry.location.lng;
-                const latitude = result.geometry.location.lat;
-                const formattedAddress = result.formatted_address;
+        return axios.post(serverURL + "/event", body)
+        .then(response => {
 
-                return {
-                    latitude: latitude,
-                    longitude: longitude,
-                    address: formattedAddress
-                };
+            console.log("CREATE EVENT SUCCESS", response.data.data);
+
+            dispatch({
+                type: "EVENTS_CREATE_SUCCESS",
             })
 
-            let body = {
-                host_id: createRequest.host_id,
-                title: createRequest.title,
-                subtitle: createRequest.subtitle,
-                address: latlong[0].address,
-                latitude: latlong[0].latitude,
-                longitude: latlong[0].longitude,
-                date: createRequest.date,
-                description: createRequest.description,
-            };
+            return new Promise.resolve(response.data.data);
 
-            console.log("REQUEST BODY: ", body);
-    
-            return axios.post(serverURL + "/event", body).then(function (response) {
-    
-                if (response.data.err){
-                    console.log("CREATE EVENT ERROR", response.data.err);
-    
-                    dispatch({
-                        type: "EVENTS_ERROR",
-                        error: 'Error creating event: please try again'
-                    });
-
-                    return new Promise.reject(response.data.err);
-                }
-                else{
-    
-                    console.log("CREATE EVENT SUCCESS", response.data.data);
-    
-                    return navigator.geolocation.getCurrentPosition((position) => {
-                        // let requestURL = serverURL + "/event/search?latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude + "&distance=50"
-                
-                        let requestURL = serverURL + "/event/search?latitude=43.684201&longitude=-79.318706&distance=50000";
-    
-                        return axios.get(requestURL).then(response => {
-    
-                            if (response.data.err){
-    
-                                console.log("GET EVENTS AROUND ME ERROR", response.data.err);
-    
-                                dispatch({
-                                    type: "EVENTS_ERROR",
-                                    error: response.data.err
-                                })
-
-                                return new Promise.reject(response.data.err);
-                            }
-                            else{
-                                console.log("GET EVENTS AROUND ME SUCCESS", response.data.data);
-    
-                                dispatch({
-                                    type: "EVENTS_SUCCESS",
-                                    events: response.data.data
-                                });
-    
-                                return new Promise.resolve();
-                            }
-                        })
-                        .catch(error => {
-    
-                            dispatch({
-                                type: "EVENTS_ERROR",
-                                error: error
-                            })
-
-                            return new Promise.reject(error);
-                        });
-                    },
-                    (error) => {
-                        console.log("POSITION ERROR: ", error);
-            
-                        dispatch({
-                            type: "EVENTS_ERROR",
-                            error: error
-                        })
-
-                        return new Promise.reject(error);
-                    },
-                    { enableHighAccuracy: true, timeout: 5000, maximumAge: 1000 });
-                }
-    
-            })
-            .catch(function (error) {
-                console.log("CREATE EVENT ERROR", error);
-    
-                dispatch({
-                    type: "EVENTS_ERROR",
-                    error: "CREATE EVENT failed: please try again"
-                });
-
-                return new Promise.reject(error);
-            });
         })
         .catch(error => {
+            console.log("CREATE EVENT ERROR", error);
+
             dispatch({
                 type: "EVENTS_ERROR",
-                error: "Error creating event: please try again"
             });
 
             return new Promise.reject(error);
-        });
-
-        
+        });     
     }
-}
-
-export function getMembers(memberIDs){
-    return new Promise.all(memberIDs.map(memberID => {
-
-        console.log("MEMBER ID: ", memberID);
-
-        let requestUrl = serverURL + "/user?id=" + memberID;
-
-        return axios.get(requestUrl).then(responseMember => {
-
-            console.log("MEMBER RESPONSE: ", responseMember.data.data);
-
-            return new Promise.resolve(responseMember.data.data);
-        })
-        .catch(error => {
-            return new Promise.reject(error)
-        });
-
-    }));
 }
 
 export function getEventById(eventID){
@@ -321,26 +153,17 @@ export function getEventById(eventID){
         let requestUrl = serverURL + "/event?id=" + eventID;
 
         return axios.get(requestUrl).then(response => {
-            if (response.data.err){
-                console.log("GET EVENT BY ID ERROR: ", response.data.err);
+            console.log("GET EVENT BY ID SUCCESS: ", response.data.data);
 
-                dispatch({
-                    type: "EVENTS_ERROR",
-                    error: response.data.err
-                });
+                let event = response.data;
 
-                return new Promise.reject(response.data.err);
-            }
-            else{
-                console.log("GET EVENT BY ID SUCCESS: ", response.data.data);
-
-                let event = response.data.data;
-
-                requestUrl = serverURL + '/user?id=' + response.data.data.host_id;
+                requestUrl = serverURL + '/user?id=' + event.host_id;
 
                 return axios.get(requestUrl).then(responseUser => {
 
-                    event.host = responseUser.data.data;
+                    let hostString = responseUser.data.user;
+
+                    event.host = JSON.parse(hostString);
 
                     console.log("EVENT BY ID UPDATED: ", event);
 
@@ -356,19 +179,16 @@ export function getEventById(eventID){
 
                     dispatch({
                         type: "EVENTS_ERROR",
-                        error: error
                     });
 
                     return new Promise.reject(error);
                 })
-            }
         })
         .catch(error => {
             console.log("GET EVENT BY ID ERROR: ", error);
 
             dispatch({
                 type: "EVENTS_ERROR",
-                error: error
             });
 
             return new Promise.reject(error);
@@ -393,55 +213,43 @@ export function participateToEvent(user_id, event_id){
         };
 
         return axios.post(requestUrl, body).then(response => {
-            if (response.data.err){
-                console.log("SUBSCRIBE TO EVENT ERROR: ", response.data.err);
+            console.log("SUBSCRIBE TO EVENT SUCCESS: ", response.data.data);
+
+            let event = response.data;
+
+            requestUrl = serverURL + '/user?id=' + event.host_id;
+
+            return axios.get(requestUrl).then(responseUser => {
+
+                let hostString = responseUser.data.user;
+
+                event.host = JSON.parse(hostString);
+
+                console.log("EVENT BY ID UPDATED: ", event);
+
+                dispatch({
+                    type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
+                    event: event
+                });
+
+                return new Promise.resolve();
+
+            })
+            .catch(error => {
+                console.log("GET EVENT BY ID ERROR: ", error);
 
                 dispatch({
                     type: "EVENTS_ERROR",
-                    error: response.data.err
                 });
 
-                return new Promise.reject(response.data.err);
-            }
-            else{
-                console.log("SUBSCRIBE TO EVENT SUCCESS: ", response.data.data);
-
-                let event = response.data.data;
-
-                requestUrl = serverURL + '/user?id=' + response.data.data.host_id;
-
-                return axios.get(requestUrl).then(responseUser => {
-
-                    event.host = responseUser.data.data;
-
-                    console.log("EVENT BY ID UPDATED: ", event);
-
-                    dispatch({
-                        type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
-                        event: event
-                    });
-
-                    return new Promise.resolve();
-    
-                })
-                .catch(error => {
-                    console.log("GET EVENT BY ID ERROR: ", error);
-
-                    dispatch({
-                        type: "EVENTS_ERROR",
-                        error: error
-                    });
-
-                    return new Promise.reject(error);
-                })
-            }
+                return new Promise.reject(error);
+            })
         })
         .catch(error => {
             console.log("GET EVENT BY ID ERROR: ", error);
 
             dispatch({
                 type: "EVENTS_ERROR",
-                error: error
             });
 
             return new Promise.reject(error);
@@ -466,54 +274,42 @@ export function unsubscribeFromEvent(user_id, event_id){
         };
 
         return axios.post(requestUrl, body).then(response => {
-            if (response.data.err){
-                console.log("SUBSCRIBE TO EVENT ERROR: ", response.data.err);
+            console.log("UNSUBSCRIBE TO EVENT SUCCESS: ", response.data);
+
+            let event = response.data;
+
+            requestUrl = serverURL + '/user?id=' + event.host_id;
+
+            return axios.get(requestUrl).then(responseUser => {
+
+                let hostString = responseUser.data.user;
+
+                event.host = JSON.parse(hostString);
+
+                console.log("EVENT BY ID UPDATED: ", event);
+
+                dispatch({
+                    type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
+                    event: event
+                });
+
+                return new Promise.resolve();
+            })
+            .catch(error => {
+                console.log("GET EVENT BY ID ERROR: ", error);
 
                 dispatch({
                     type: "EVENTS_ERROR",
-                    error: response.data.err
                 });
 
-                return new Promise.reject(response.data.err);
-            }
-            else{
-                console.log("SUBSCRIBE TO EVENT SUCCESS: ", response.data.data);
-
-                let event = response.data.data;
-
-                requestUrl = serverURL + '/user?id=' + response.data.data.host_id;
-
-                return axios.get(requestUrl).then(responseUser => {
-
-                    event.host = responseUser.data.data;
-
-                    console.log("EVENT BY ID UPDATED: ", event);
-
-                    dispatch({
-                        type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
-                        event: event
-                    });
-    
-                    return new Promise.resolve();
-                })
-                .catch(error => {
-                    console.log("GET EVENT BY ID ERROR: ", error);
-
-                    dispatch({
-                        type: "EVENTS_ERROR",
-                        error: error
-                    });
-
-                    return new Promise.reject(error);
-                })
-            }
+                return new Promise.reject(error);
+            })
         })
         .catch(error => {
             console.log("GET EVENT BY ID ERROR: ", error);
 
             dispatch({
                 type: "EVENTS_ERROR",
-                error: error
             });
 
             return new Promise.reject(error);
@@ -536,30 +332,16 @@ export function getHostedEvents(host_id){
         };
 
         return axios.post(requestUrl, body).then(response => {
-            if (response.data.err){
-                console.log("GET HOSTED EVENTS ERROR: ", response.data.err);
+            console.log("GET HOSTED EVENTS SUCCESS: ", response.data.data);
 
-                dispatch({
-                    type: "EVENTS_HOSTED_EVENTS_ERROR",
-                    error: response.data.err
-                });
+            let event = response.data.data;
 
-                return new Promise.reject(response.data.err);
+            dispatch({
+                type: "EVENTS_HOSTED_EVENTS_SUCCESS",
+                events: response.data.data
+            });
 
-            }
-            else{
-                console.log("GET HOSTED EVENTS SUCCESS: ", response.data.data);
-
-                let event = response.data.data;
-
-                dispatch({
-                    type: "EVENTS_HOSTED_EVENTS_SUCCESS",
-                    events: response.data.data
-                });
-
-                return new Promise.resolve(response.data.data);
-
-            }
+            return new Promise.resolve(response.data.data);
         })
         .catch(error => {
             console.log("GET EVENT BY ID ERROR: ", error);

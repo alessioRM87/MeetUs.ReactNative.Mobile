@@ -15,37 +15,21 @@ export function login(email, password){
         };
 
         return axios.post(serverURL + "/user/login", body)
-          .then(response => {
+        .then(response => {
 
-            console.log(response)
+            console.log("AUTHENTICATION SUCCESS", response.data);
+            let userInfoString = JSON.stringify(response.data);
+            return saveAsyncStorage(dispatch, "userInfo", userInfoString);
+        })
+        .catch(error => {
+            console.log("LOGIN ERROR", error);
+            dispatch({
+                type: "AUTHENTICATION_ERROR",
+            });
 
-            if (response.status != 200){
-                console.log("AUTHENTICATION ERROR", response.data.message);
-                dispatch({
-                    type: "AUTHENTICATION_ERROR",
-                });
+            return new Promise.reject('Wrong email/password: please try again');
 
-                return new Promise.reject('Wrong email/password: please try again');
-
-            }
-            else{
-
-                console.log("AUTHENTICATION SUCCESS", response.data);
-                let userInfoString = JSON.stringify(response.data);
-                return saveAsyncStorage(dispatch, "userInfo", userInfoString);
-
-            }
-
-          })
-          .catch(error => {
-                console.log("LOGIN ERROR", error);
-                dispatch({
-                    type: "AUTHENTICATION_ERROR",
-                });
-
-                return new Promise.reject("Login failed: please try again");
-
-          });
+        });
 
     }
 }
@@ -67,25 +51,12 @@ export function register(email, firstName, lastName, password){
         return axios.post(serverURL + "/user/register", body)
         .then(fresponse =>  {
 
-            if (response.status != 200){
-                console.log("REGISTRATION ERROR", response.data.message);
-
-                dispatch({
-                    type: "AUTHENTICATION_ERROR",
-                });
-
-                return new Promise.reject('An account with this email already exists')
-            }
-            else{
-
-                console.log("REGISTRATION SUCCESS", response.data.data);
-                let userInfoString = JSON.stringify(response.data.data);
-                return saveAsyncStorage(dispatch, "userInfo", userInfoString);
-
-            }
+            console.log("REGISTRATION SUCCESS", response.data);
+            let userInfoString = JSON.stringify(response.data);
+            return saveAsyncStorage(dispatch, "userInfo", userInfoString);
 
         })
-        .catch(function (error) {
+        .catch(error => {
             console.log("REGISTRATION ERROR", error);
 
             dispatch({
