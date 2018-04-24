@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { deleteEvent } from '../../actions/actionEvents';
+import { deleteEvent, getEventsAroundMe } from '../../actions/actionEvents';
 
 class ButtonEditDelete extends React.Component{
 
@@ -14,8 +14,59 @@ class ButtonEditDelete extends React.Component{
     }
 
     handleOnPressDelete(){
-        this.props.deleteEvent(this.props.event._id).then(() => {
-            this.props.navigation.pop();
+        this.props.deleteEvent(this.props.event._id).then(async () => {
+
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
+                    title: 'App needs to access your location',
+                    message: 'App needs access to your location ' +
+                    'so we can let our app be even more awesome.'
+                    }
+                );
+    
+            if (granted) {
+                console.log("GRANTED!");
+            }
+    
+            navigator.geolocation.getCurrentPosition((position) => {
+    
+                console.log("GET POSITION SUCCESS: ", position);
+    
+                this.setState({
+                    region: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        latitudeDelta: 0.05,
+                        longitudeDelta: 0.05,
+                    }
+                })
+    
+                this.props.getEventsAroundMe(position).then(events => {
+                    this.props.navigation.pop();
+                })
+                .catch(error => {
+    
+                    if (error.response.status == 401){
+    
+                        Alert.alert(
+                            'USER NOT LOGGED IN',
+                            'You will be redirected to the login page',
+                            [
+                            {text: 'OK', onPress: () => {
+                                AsyncStorage.clear(() => {
+                                    this.props.navigation.navigate('Login');
+                                });
+                            }},
+                            ],
+                            { cancelable: false }
+                        )
+                    }
+                });
+            }, (error) => {
+    
+                console.log("GET POSITION ERROR: ", error);
+    
+            })
         });
     }
 

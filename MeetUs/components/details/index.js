@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ImageBackground, ProgressBarAndroid } from 'react-native';
+import { View, StyleSheet, ImageBackground, ProgressBarAndroid, Alert, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import Header from '../common/header';
 import ButtonBack from '../common/back';
@@ -21,7 +21,26 @@ class Details extends React.Component{
 
     componentDidMount(){
 
-        this.props.getEventById(this.props.navigation.state.params.eventID);
+        this.props.getEventById(this.props.navigation.state.params.eventID).then(event => {
+
+        })
+        .catch(error => {
+            if (error.response.status == 401){
+
+                Alert.alert(
+                    'USER NOT LOGGED IN',
+                    'You will be redirected to the login page',
+                    [
+                    {text: 'OK', onPress: () => {
+                        AsyncStorage.clear(() => {
+                            this.props.navigation.navigate('Login');
+                        });
+                    }},
+                    ],
+                    { cancelable: false }
+                )
+            }
+        })
     }
 
     handleOnClickBack(){

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Button, View, StyleSheet, Dimensions, ImageBackground, Text, ProgressBarAndroid, Platform, PermissionsAndroid } from 'react-native';
+import { Button, View, StyleSheet, Dimensions, ImageBackground, Text, ProgressBarAndroid, Platform, PermissionsAndroid, Alert, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import MapView, { Marker } from 'react-native-maps';
 import Header from '../common/header';
 import ButtonBack from '../common/back';
-import { getEventsAroundMe, getPosition } from '../../actions/actionEvents';
+import { getEventsAroundMe } from '../../actions/actionEvents';
 
 class Search extends React.Component{
 
@@ -52,7 +52,9 @@ class Search extends React.Component{
 
             })
             .catch(error => {
+
                 if (error.response.status == 401){
+
                     Alert.alert(
                         'USER NOT LOGGED IN',
                         'You will be redirected to the login page',

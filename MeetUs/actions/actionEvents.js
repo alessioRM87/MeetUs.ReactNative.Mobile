@@ -3,60 +3,6 @@ import axios from 'axios';
 import { PermissionsAndroid, Platform } from 'react-native';
 import { login } from '../actions/actionAuthentication';
 
-export function getPosition(){
-
-    return dispatch => {
-        
-        // var granted;
-
-        // if (Platform.OS == "android" && Platform.Version >= 23){
-        //     granted = requestLocationPermission();
-        // }
-
-        // console.log("GRANTED: ", granted);
-            
-        // if (granted == PermissionsAndroid.RESULTS.GRANTED || (Platform.OS == "android" && Platform.Version < 23)){
-
-        //     console.log("PERMISSIONS GRANTED");
-
-        //     return navigator.geolocation.getCurrentPosition((position) => {
-
-        //         console.log("GET POSITION SUCCESS: ", position);
-
-        //         return new Promise.resolve(position);
-
-        //     }, (error) => {
-
-        //         console.log("GET POSITION ERROR: ", error);
-
-        //         return new Promise.reject();
-        //     })
-        // }
-        // else{
-
-        //     console.log("PERMISSIONS NOT GRANTED");
-
-        //     return new Promise.reject();
-        // }
-
-            return navigator.geolocation.getCurrentPosition((position) => {
-
-                console.log("GET POSITION SUCCESS: ", position);
-
-                return new Promise.resolve(position);
-
-            }, (error) => {
-
-                console.log("GET POSITION ERROR: ", error);
-
-                return new Promise.reject();
-            },
-            { enableHighAccuracy: true, timeout: 25000, maximumAge: 3600000 })
-    }
-
-    
-}
-
 export function validateAddress(address){
     let googleAPIUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
     var googleRequestUrl = googleAPIUrl + createRequest.address;
@@ -88,19 +34,6 @@ export function validateAddress(address){
     });
 }
 
-async function requestLocationPermission(){
-
-    let granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-            'title': 'MeetUs Location Request',
-            'message': 'MeetUs has to access to your location to show events around your position'
-        }
-    );
-
-    return granted;
-    
-}
-
 export function getEventsAroundMe(position){
 
     return dispatch => {
@@ -111,11 +44,11 @@ export function getEventsAroundMe(position){
             type: "EVENTS_LOADING"
         });
 
-        let requestURL = serverURL + "/event/search?latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude + "&distance=50"
+        let requestURL = serverURL + "/event/search?latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude + "&distance=50000"
     
         // let requestURL = serverURL + "/event/search?latitude=43.684201&longitude=-79.318706&distance=50000";
 
-        axios.get(requestURL)
+        return axios.get(requestURL)
         .then(response => {
 
             console.log("GET EVENTS AROUND ME SUCCESS", response.data.data);
@@ -124,12 +57,18 @@ export function getEventsAroundMe(position){
                 type: "EVENTS_SUCCESS",
                 events: response.data.data
             });
+
+            return new Promise.resolve(reponse.data.data);
         })
         .catch(error => {
+
+            console.log("GET EVENTS AROUND ME ERROR: ", error.response);
 
             dispatch({
                 type: "EVENTS_ERROR",
             })
+
+            return new Promise.reject(error);
         });
 
         

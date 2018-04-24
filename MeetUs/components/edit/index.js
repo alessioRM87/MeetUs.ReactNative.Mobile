@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ImageBackground, Text, TextInput, TouchableOpacity, ProgressBarAndroid } from 'react-native';
+import { View, StyleSheet, ImageBackground, Text, TextInput, TouchableOpacity, ProgressBarAndroid, Alert, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -129,9 +129,27 @@ class Edit extends React.Component{
                this.props.navigation.pop(); 
             })
             .catch(error => {
-                this.setState({
-                    error: error
-                })
+
+                if (error.response.status == 401){
+
+                    Alert.alert(
+                        'USER NOT LOGGED IN',
+                        'You will be redirected to the login page',
+                        [
+                        {text: 'OK', onPress: () => {
+                            AsyncStorage.clear(() => {
+                                this.props.navigation.navigate('Login');
+                            });
+                        }},
+                        ],
+                        { cancelable: false }
+                    )
+                }
+                else{
+                    this.setState({
+                        error: "Error updating event: please try again"
+                    })
+                }
             });
         }
     }

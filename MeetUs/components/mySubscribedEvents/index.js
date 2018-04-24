@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ImageBackground, Text, ScrollView, Image, TouchableOpacity, ProgressBarAndroid } from 'react-native';
+import { View, StyleSheet, ImageBackground, Text, ScrollView, Image, TouchableOpacity, ProgressBarAndroid, Alert, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import { getSubscribedEvents } from '../../actions/actionEvents';
 import Header from '../common/header';
@@ -16,7 +16,21 @@ class MySubscribedEvents extends React.Component{
 
         })
         .catch(error => {
-            
+            if (error.response.status == 401){
+
+                Alert.alert(
+                    'USER NOT LOGGED IN',
+                    'You will be redirected to the login page',
+                    [
+                    {text: 'OK', onPress: () => {
+                        AsyncStorage.clear(() => {
+                            this.props.navigation.navigate('Login');
+                        });
+                    }},
+                    ],
+                    { cancelable: false }
+                )
+            }
         });
     }
 
@@ -41,10 +55,6 @@ class MySubscribedEvents extends React.Component{
                         <View style={styles.container}>
                             <Image style={styles.icon} source={require('../../images/ic_today_black_24dp.png')}/>
                             <Text style={styles.text}>{event.date}</Text>
-                        </View>
-                        <View style={styles.container}>
-                            <Image style={styles.icon} source={require('../../images/ic_person_black_24dp.png')}/>
-                            <Text style={styles.text}>{this.props.user.name}</Text>
                         </View>
                     </TouchableOpacity>
         })

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ImageBackground, Text, ScrollView, Image, TouchableOpacity, ProgressBarAndroid} from 'react-native';
+import { View, StyleSheet, ImageBackground, Text, ScrollView, Image, TouchableOpacity, ProgressBarAndroid, Alert, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import { getHostedEvents } from '../../actions/actionEvents';
 import Header from '../common/header';
@@ -16,7 +16,21 @@ class MyHostedEvents extends React.Component{
 
         })
         .catch(error => {
-            
+            if (error.response.status == 401){
+
+                Alert.alert(
+                    'USER NOT LOGGED IN',
+                    'You will be redirected to the login page',
+                    [
+                    {text: 'OK', onPress: () => {
+                        AsyncStorage.clear(() => {
+                            this.props.navigation.navigate('Login');
+                        });
+                    }},
+                    ],
+                    { cancelable: false }
+                )
+            }
         });
     }
 
