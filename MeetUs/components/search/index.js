@@ -4,16 +4,74 @@ import { connect } from 'react-redux';
 import MapView, { Marker } from 'react-native-maps';
 import Header from '../common/header';
 import ButtonBack from '../common/back';
-import { getEventsAroundMe, setSelectedEventID } from '../../actions/actionEvents';
+import { getEventsAroundMe, getPosition } from '../../actions/actionEvents';
 
 class Search extends React.Component{
 
     constructor(props){
         super(props);
+
+        this.state = {
+            region: {
+                latitude: 43.684201,
+                longitude: -79.318706,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.05,
+            }
+        }
     }
 
-    componentDidMount(){
-        this.props.getEventsAroundMe();
+    async componentDidMount(){
+
+        const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
+                title: 'App needs to access your location',
+                message: 'App needs access to your location ' +
+                'so we can let our app be even more awesome.'
+                }
+            );
+
+        if (granted) {
+            console.log("GRANTED!");
+        }
+
+        navigator.geolocation.getCurrentPosition((position) => {
+
+            console.log("GET POSITION SUCCESS: ", position);
+
+            this.setState({
+                region: {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    latitudeDelta: 0.05,
+                    longitudeDelta: 0.05,
+                }
+            })
+
+            this.props.getEventsAroundMe(position).then(events => {
+
+            })
+            .catch(error => {
+                if (error.response.status == 401){
+                    Alert.alert(
+                        'USER NOT LOGGED IN',
+                        'You will be redirected to the login page',
+                        [
+                        {text: 'OK', onPress: () => {
+                            AsyncStorage.clear(() => {
+                                this.props.navigation.navigate('Login');
+                            });
+                        }},
+                        ],
+                        { cancelable: false }
+                    )
+                }
+            });
+        }, (error) => {
+
+            console.log("GET POSITION ERROR: ", error);
+
+        })
     }
 
     handleOnClickBack(){
@@ -25,14 +83,20 @@ class Search extends React.Component{
     }
 
     renderMarkers(){
-        return this.props.events.map((event, i) => {
-            return <Marker
-                key={i}
-                coordinate={{latitude: event.latitude, longitude: event.longitude}}
-                title={event.title}
-                onPress={this.handleOnPressMarker.bind(this, event._id)}>
-            </Marker>
-        });
+
+        if (this.props.events.length > 0){
+
+            console.log("EVENTS FOUND");
+
+            return this.props.events.map((event, i) => {
+                return <Marker
+                    key={i}
+                    coordinate={{latitude: event.latitude, longitude: event.longitude}}
+                    title={event.title}
+                    onPress={this.handleOnPressMarker.bind(this, event._id)}>
+                </Marker>
+            });
+        }
     }
 
     render(){
@@ -42,12 +106,7 @@ class Search extends React.Component{
                 <ButtonBack navigateBack={this.handleOnClickBack.bind(this)}/>
                 <MapView
                 style={styles.map}
-                initialRegion={{
-                latitude: 43.684201,
-                longitude: -79.318706,
-                latitudeDelta: 0.05,
-                longitudeDelta: 0.05,
-                }}>
+                initialRegion={this.state.region}>
                     {
                         this.props.loading
                         ?
@@ -101,8 +160,8 @@ function mapStateToProps (state) {
 }
 function mapDispatchToProps(dispatch){
     return {
-        getEventsAroundMe: () => dispatch(getEventsAroundMe()),
-        setSelectedEventID: (eventID) => dispatch(setSelectedEventID(eventID))
+        getEventsAroundMe: (position) => dispatch(getEventsAroundMe(position)),
+        getPosition: () => dispatch(getPosition())
     };
 }
 export default connect(
