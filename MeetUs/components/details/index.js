@@ -88,6 +88,7 @@ class Details extends React.Component{
                         <EventTitle/>
                         <EventSubtitle/>
                         <EventDescription/>
+                        <EventMembers/>
                     </KeyboardAwareScrollView>
                     {
                         (this.props.event)

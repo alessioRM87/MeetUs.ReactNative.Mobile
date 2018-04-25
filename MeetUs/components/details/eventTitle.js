@@ -22,7 +22,7 @@ class EventTitle extends React.Component{
                 </View>
                 <View style={styles.container}>
                     <Image style={styles.icon} source={require('../../images/ic_person_black_24dp.png')}/>
-                    <Text style={styles.text}>{(this.props.event && this.props.event.host) ? this.props.event.host.name : ""}</Text>
+                    <Text style={styles.text}>{(this.props.event && this.props.event.host_id.name) ? this.props.event.host_id.name : ""}</Text>
                 </View>
             </View>
         );

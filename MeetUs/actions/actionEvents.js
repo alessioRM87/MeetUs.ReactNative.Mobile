@@ -4,34 +4,38 @@ import { PermissionsAndroid, Platform } from 'react-native';
 import { login } from '../actions/actionAuthentication';
 
 export function validateAddress(address){
-    let googleAPIUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
-    var googleRequestUrl = googleAPIUrl + createRequest.address;
 
-    return axios.get(googleRequestUrl)
-    .then(response => {
-        let latlong = response.data.results.map(result => {
-            const longitude = result.geometry.location.lng;
-            const latitude = result.geometry.location.lat;
-            const formattedAddress = result.formatted_address;
-
-            return {
-                latitude: latitude,
-                longitude: longitude,
-                address: formattedAddress
-            };
+    return dispatch => {
+        let googleAPIUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+        var googleRequestUrl = googleAPIUrl + address;
+    
+        return axios.get(googleRequestUrl)
+        .then(response => {
+            let latlong = response.data.results.map(result => {
+                const longitude = result.geometry.location.lng;
+                const latitude = result.geometry.location.lat;
+                const formattedAddress = result.formatted_address;
+    
+                return {
+                    latitude: latitude,
+                    longitude: longitude,
+                    address: formattedAddress
+                };
+            });
+    
+            return new Promise.resolve({
+                latitude: latlong[0].latitude,
+                longitude: latlong[0].longitude,
+                address: latlong[0].formattedAddress     
+            });
+        })
+        .catch(error => {
+            console.log("VALIDATE ADDRESS ERROR: ", error);
+    
+            return new Promise.reject();
         });
-
-        return new Promise.resolve({
-            latitude: latlong[0].latitude,
-            longitude: latlong[0].longitude,
-            address: latlong[0].formattedAddress     
-        });
-    })
-    .catch(error => {
-        console.log("VALIDATE ADDRESS ERROR: ", error);
-
-        return new Promise.reject();
-    });
+    }
+    
 }
 
 export function getEventsAroundMe(position){
@@ -96,13 +100,13 @@ export function create(createRequest){
         return axios.post(serverURL + "/event", body)
         .then(response => {
 
-            console.log("CREATE EVENT SUCCESS", response.data.data);
+            console.log("CREATE EVENT SUCCESS", response.data);
 
             dispatch({
                 type: "EVENTS_CREATE_SUCCESS",
             })
 
-            return new Promise.resolve(response.data.data);
+            return new Promise.resolve(response.data);
 
         })
         .catch(error => {
@@ -129,32 +133,14 @@ export function getEventById(eventID){
         return axios.get(requestUrl).then(response => {
             console.log("GET EVENT BY ID SUCCESS: ", response.data.data);
 
-                let event = response.data;
+                console.log("EVENT BY ID UPDATED: ", response.data);
 
-                requestUrl = serverURL + '/user?id=' + event.host_id;
+                dispatch({
+                    type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
+                    event: response.data
+                });
 
-                return axios.get(requestUrl).then(responseUser => {
-
-                    event.host = responseUser.data;
-
-                    console.log("EVENT BY ID UPDATED: ", event);
-
-                    dispatch({
-                        type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
-                        event: event
-                    });
-    
-                    return new Promise.resolve(event);
-                })
-                .catch(error => {
-                    console.log("GET EVENT BY ID ERROR: ", error);
-
-                    dispatch({
-                        type: "EVENTS_ERROR",
-                    });
-
-                    return new Promise.reject(error);
-                })
+                return new Promise.resolve(response.data);
         })
         .catch(error => {
             console.log("GET EVENT BY ID ERROR: ", error);
@@ -185,35 +171,14 @@ export function participateToEvent(user_id, event_id){
         };
 
         return axios.post(requestUrl, body).then(response => {
-            console.log("SUBSCRIBE TO EVENT SUCCESS: ", response.data.data);
+            console.log("SUBSCRIBE TO EVENT SUCCESS: ", response.data);
 
-            let event = response.data;
+            dispatch({
+                type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
+                event: response.data
+            });
 
-            requestUrl = serverURL + '/user?id=' + event.host_id;
-
-            return axios.get(requestUrl).then(responseUser => {
-
-                event.host = responseUser.data;
-
-                console.log("EVENT BY ID UPDATED: ", event);
-
-                dispatch({
-                    type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
-                    event: event
-                });
-
-                return new Promise.resolve(event);
-
-            })
-            .catch(error => {
-                console.log("GET EVENT BY ID ERROR: ", error);
-
-                dispatch({
-                    type: "EVENTS_ERROR",
-                });
-
-                return new Promise.reject(error);
-            })
+            return new Promise.resolve(response.data);
         })
         .catch(error => {
             console.log("GET EVENT BY ID ERROR: ", error);
@@ -244,34 +209,14 @@ export function unsubscribeFromEvent(user_id, event_id){
         };
 
         return axios.post(requestUrl, body).then(response => {
-            console.log("UNSUBSCRIBE TO EVENT SUCCESS: ", response.data);
+            console.log("UNSUBSCRIBE FROM EVENT SUCCESS: ", response.data);
 
-            let event = response.data;
+            dispatch({
+                type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
+                event: response.data
+            });
 
-            requestUrl = serverURL + '/user?id=' + event.host_id;
-
-            return axios.get(requestUrl).then(responseUser => {
-
-                event.host = responseUser.data;
-
-                console.log("EVENT BY ID UPDATED: ", event);
-
-                dispatch({
-                    type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
-                    event: event
-                });
-
-                return new Promise.resolve(event);
-            })
-            .catch(error => {
-                console.log("GET EVENT BY ID ERROR: ", error);
-
-                dispatch({
-                    type: "EVENTS_ERROR",
-                });
-
-                return new Promise.reject(error);
-            })
+            return new Promise.resolve(response.data);
         })
         .catch(error => {
             console.log("GET EVENT BY ID ERROR: ", error);
@@ -297,8 +242,6 @@ export function getHostedEvents(host_id){
 
         return axios.get(requestUrl).then(response => {
             console.log("GET HOSTED EVENTS SUCCESS: ", response.data);
-
-            let event = response.data;
 
             dispatch({
                 type: "EVENTS_HOSTED_EVENTS_SUCCESS",
@@ -407,32 +350,12 @@ export function updateEvent(updateRequest){
 
            console.log("UPDATE EVENT SUCCESS: ", response.data);
 
-            let event = response.data;
+           dispatch({
+               type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
+               event: response.data
+           });
 
-            requestUrl = serverURL + '/user?id=' + event.host_id;
-
-            return axios.get(requestUrl).then(responseUser => {
-
-                event.host = responseUser.data;
-
-                console.log("EVENT BY ID UPDATED: ", event);
-
-                dispatch({
-                    type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
-                    event: event
-                });
-
-                return new Promise.resolve(event);
-            })
-            .catch(error => {
-                console.log("GET EVENT BY ID ERROR: ", error);
-
-                dispatch({
-                    type: "EVENTS_ERROR",
-                });
-
-                return new Promise.reject(error);
-            })
+           return new Promise.resolve(response.data);
 
         })
         .catch(error => {

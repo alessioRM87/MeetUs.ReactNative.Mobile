@@ -39,11 +39,22 @@ export default function eventsReducer(state = initialState, action = {}){
                 loading : true,
             }
         case "EVENTS_SUCCESS":
-            return{
-                ...state,
-                loading : false,
-                events: action.events
+
+            if (action.events){
+                return{
+                    ...state,
+                    loading : false,
+                    events: action.events
+                }
             }
+            else{
+                return{
+                    ...state,
+                    loading : false,
+                }
+            }
+
+            
         case "EVENTS_ERROR":
             return{
                 ...state,

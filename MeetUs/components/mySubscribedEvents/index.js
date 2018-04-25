@@ -56,6 +56,10 @@ class MySubscribedEvents extends React.Component{
                             <Image style={styles.icon} source={require('../../images/ic_today_black_24dp.png')}/>
                             <Text style={styles.text}>{event.date}</Text>
                         </View>
+                        <View style={styles.container}>
+                            <Image style={styles.icon} source={require('../../images/ic_person_black_24dp.png')}/>
+                            <Text style={styles.text}>{event.host_id.name}</Text>
+                        </View>
                     </TouchableOpacity>
         })
     }
