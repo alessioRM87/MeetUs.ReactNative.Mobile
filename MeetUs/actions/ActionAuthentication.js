@@ -49,7 +49,7 @@ export function register(email, firstName, lastName, password){
         };
 
         return axios.post(serverURL + "/user/register", body)
-        .then(fresponse =>  {
+        .then(response =>  {
 
             console.log("REGISTRATION SUCCESS", response.data);
             let userInfoString = JSON.stringify(response.data);

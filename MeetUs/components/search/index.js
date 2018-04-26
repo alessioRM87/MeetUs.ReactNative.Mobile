@@ -39,23 +39,23 @@ class Search extends React.Component{
 
             console.log("GET POSITION SUCCESS: ", position);
 
-            this.setState({
-                region: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    latitudeDelta: 0.05,
-                    longitudeDelta: 0.05,
-                }
-            })
-
             // this.setState({
             //     region: {
-            //         latitude: 43.684201,
-            //         longitude: -79.318706,
+            //         latitude: position.coords.latitude,
+            //         longitude: position.coords.longitude,
             //         latitudeDelta: 0.05,
             //         longitudeDelta: 0.05,
             //     }
             // })
+
+            this.setState({
+                region: {
+                    latitude: 43.684201,
+                    longitude: -79.318706,
+                    latitudeDelta: 0.05,
+                    longitudeDelta: 0.05,
+                }
+            })
 
             this.props.getEventsAroundMe(position).then(events => {
 

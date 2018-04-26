@@ -49,7 +49,6 @@ export default function eventsReducer(state = initialState, action = {}){
                 }
             }
             else{
-                onsole.log("REDUCER NO EVENTS: ");
                 return{
                     ...state,
                     loading : false,

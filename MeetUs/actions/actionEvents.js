@@ -48,9 +48,9 @@ export function getEventsAroundMe(position){
             type: "EVENTS_LOADING"
         });
 
-        let requestURL = serverURL + "/event/search?latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude + "&distance=50000"
+        // let requestURL = serverURL + "/event/search?latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude + "&distance=50000"
     
-        // let requestURL = serverURL + "/event/search?latitude=43.684201&longitude=-79.318706&distance=50000";
+        let requestURL = serverURL + "/event/search?latitude=43.684201&longitude=-79.318706&distance=50000";
 
         return axios.get(requestURL)
         .then(response => {
@@ -131,9 +131,7 @@ export function getEventById(eventID){
         let requestUrl = serverURL + "/event?id=" + eventID;
 
         return axios.get(requestUrl).then(response => {
-            console.log("GET EVENT BY ID SUCCESS: ", response.data.data);
-
-                console.log("EVENT BY ID UPDATED: ", response.data);
+            console.log("GET EVENT BY ID SUCCESS: ", response.data);
 
                 dispatch({
                     type: "EVENTS_GET_EVENT_BY_ID_SUCCESS",
