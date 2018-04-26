@@ -48,9 +48,9 @@ export function getEventsAroundMe(position){
             type: "EVENTS_LOADING"
         });
 
-        // let requestURL = serverURL + "/event/search?latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude + "&distance=50000"
+        let requestURL = serverURL + "/event/search?latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude + "&distance=50000"
     
-        let requestURL = serverURL + "/event/search?latitude=43.684201&longitude=-79.318706&distance=50000";
+        // let requestURL = serverURL + "/event/search?latitude=43.684201&longitude=-79.318706&distance=50000";
 
         return axios.get(requestURL)
         .then(response => {
