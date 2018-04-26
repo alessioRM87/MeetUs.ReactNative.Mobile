@@ -11,7 +11,7 @@ class EventMembers extends React.Component{
 
     renderMembers(){
 
-        return this.props.event.users.map((member, i) => {
+        return this.props.event.members.map((member, i) => {
             return <Text key={i} style={styles.text}>{member.name}</Text>
         });
     }

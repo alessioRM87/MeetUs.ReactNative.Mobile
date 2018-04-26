@@ -1,1 +1,1 @@
-export const serverURL = "https://meetusappreactnative.herokuapp.com/api";
+export const serverURL = "https://meetusbackendreactnativev2.herokuapp.com/api";

@@ -39,10 +39,19 @@ class Search extends React.Component{
 
             console.log("GET POSITION SUCCESS: ", position);
 
+            // this.setState({
+            //     region: {
+            //         latitude: position.coords.latitude,
+            //         longitude: position.coords.longitude,
+            //         latitudeDelta: 0.05,
+            //         longitudeDelta: 0.05,
+            //     }
+            // })
+
             this.setState({
                 region: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
+                    latitude: 43.684201,
+                    longitude: -79.318706,
                     latitudeDelta: 0.05,
                     longitudeDelta: 0.05,
                 }
@@ -87,8 +96,6 @@ class Search extends React.Component{
     renderMarkers(){
 
         if (this.props.events.length > 0){
-
-            console.log("EVENTS FOUND");
 
             return this.props.events.map((event, i) => {
                 return <Marker
@@ -163,7 +170,6 @@ function mapStateToProps (state) {
 function mapDispatchToProps(dispatch){
     return {
         getEventsAroundMe: (position) => dispatch(getEventsAroundMe(position)),
-        getPosition: () => dispatch(getPosition())
     };
 }
 export default connect(

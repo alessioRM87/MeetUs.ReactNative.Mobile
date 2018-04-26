@@ -54,12 +54,12 @@ class Details extends React.Component{
     renderButtons(){
         var isMember = false;
 
-        if (this.props.user._id != this.props.event.host_id){
+        if (this.props.user._id != this.props.event.host_id._id){
 
-            console.log("User is not host: ", this.props.user._id, this.props.event.host_id);
+            console.log("User is not host: ", this.props.user._id, this.props.event.host_id._id);
 
             for (var i = 0; i < this.props.event.members.length; i++){
-                if (this.props.user._id == this.props.event.members[i]){
+                if (this.props.user._id == this.props.event.members[i]._id){
                     isMember = true;
                 }
             }

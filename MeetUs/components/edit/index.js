@@ -167,7 +167,6 @@ class Edit extends React.Component{
                     <Header headerText="UPDATE EVENT"/>
                     <ButtonBack navigateBack={this.handleOnClickBack.bind(this)}/>
                     <KeyboardAwareScrollView style={styles.scrollView}>
-                        <Text style={styles.title} allowFontScaling={false}>UPDATE EVENT</Text>                   
                         <View style={styles.inputContainer}>
                             <TextInput
                                 style={styles.input}

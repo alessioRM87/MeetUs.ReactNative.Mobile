@@ -42,15 +42,15 @@ export function getEventsAroundMe(position){
 
     return dispatch => {
 
-        console.log("GET EVENTS AROUND ME CALLED");
+        console.log("GET EVENTS AROUND ME LOADING");
 
         dispatch({
             type: "EVENTS_LOADING"
         });
 
-        let requestURL = serverURL + "/event/search?latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude + "&distance=50000"
+        // let requestURL = serverURL + "/event/search?latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude + "&distance=50000"
     
-        // let requestURL = serverURL + "/event/search?latitude=43.684201&longitude=-79.318706&distance=50000";
+        let requestURL = serverURL + "/event/search?latitude=43.684201&longitude=-79.318706&distance=50000";
 
         return axios.get(requestURL)
         .then(response => {
@@ -62,7 +62,7 @@ export function getEventsAroundMe(position){
                 events: response.data.data
             });
 
-            return new Promise.resolve(reponse.data.data);
+            return new Promise.resolve(response.data.data);
         })
         .catch(error => {
 

@@ -41,6 +41,7 @@ export default function eventsReducer(state = initialState, action = {}){
         case "EVENTS_SUCCESS":
 
             if (action.events){
+                console.log("REDUCER EVENTS: ", action.events);
                 return{
                     ...state,
                     loading : false,
@@ -48,6 +49,7 @@ export default function eventsReducer(state = initialState, action = {}){
                 }
             }
             else{
+                onsole.log("REDUCER NO EVENTS: ");
                 return{
                     ...state,
                     loading : false,
